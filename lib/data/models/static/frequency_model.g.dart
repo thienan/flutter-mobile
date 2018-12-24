@@ -9,10 +9,15 @@ part of 'frequency_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<FrequencyListResponse> _$frequencyListResponseSerializer =
     new _$FrequencyListResponseSerializer();
@@ -33,7 +38,7 @@ class _$FrequencyListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, FrequencyListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -47,7 +52,7 @@ class _$FrequencyListResponseSerializer
   @override
   FrequencyListResponse deserialize(
       Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new FrequencyListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -81,7 +86,7 @@ class _$FrequencyItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, FrequencyItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -94,7 +99,7 @@ class _$FrequencyItemResponseSerializer
   @override
   FrequencyItemResponse deserialize(
       Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new FrequencyItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -124,7 +129,7 @@ class _$FrequencyEntitySerializer
 
   @override
   Iterable serialize(Serializers serializers, FrequencyEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
@@ -140,7 +145,7 @@ class _$FrequencyEntitySerializer
 
   @override
   FrequencyEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new FrequencyEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -177,8 +182,9 @@ class _$FrequencyListResponse extends FrequencyListResponse {
       (new FrequencyListResponseBuilder()..update(updates)).build();
 
   _$FrequencyListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('FrequencyListResponse', 'data');
+    }
   }
 
   @override
@@ -190,10 +196,9 @@ class _$FrequencyListResponse extends FrequencyListResponse {
       new FrequencyListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! FrequencyListResponse) return false;
-    return data == other.data;
+    return other is FrequencyListResponse && data == other.data;
   }
 
   @override
@@ -230,7 +235,9 @@ class FrequencyListResponseBuilder
 
   @override
   void replace(FrequencyListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$FrequencyListResponse;
   }
 
@@ -269,8 +276,9 @@ class _$FrequencyItemResponse extends FrequencyItemResponse {
       (new FrequencyItemResponseBuilder()..update(updates)).build();
 
   _$FrequencyItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('FrequencyItemResponse', 'data');
+    }
   }
 
   @override
@@ -282,10 +290,9 @@ class _$FrequencyItemResponse extends FrequencyItemResponse {
       new FrequencyItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! FrequencyItemResponse) return false;
-    return data == other.data;
+    return other is FrequencyItemResponse && data == other.data;
   }
 
   @override
@@ -322,7 +329,9 @@ class FrequencyItemResponseBuilder
 
   @override
   void replace(FrequencyItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$FrequencyItemResponse;
   }
 
@@ -364,11 +373,15 @@ class _$FrequencyEntity extends FrequencyEntity {
       (new FrequencyEntityBuilder()..update(updates)).build();
 
   _$FrequencyEntity._({this.id, this.name, this.dateInterval}) : super._() {
-    if (id == null) throw new BuiltValueNullFieldError('FrequencyEntity', 'id');
-    if (name == null)
+    if (id == null) {
+      throw new BuiltValueNullFieldError('FrequencyEntity', 'id');
+    }
+    if (name == null) {
       throw new BuiltValueNullFieldError('FrequencyEntity', 'name');
-    if (dateInterval == null)
+    }
+    if (dateInterval == null) {
       throw new BuiltValueNullFieldError('FrequencyEntity', 'dateInterval');
+    }
   }
 
   @override
@@ -380,10 +393,10 @@ class _$FrequencyEntity extends FrequencyEntity {
       new FrequencyEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! FrequencyEntity) return false;
-    return id == other.id &&
+    return other is FrequencyEntity &&
+        id == other.id &&
         name == other.name &&
         dateInterval == other.dateInterval;
   }
@@ -434,7 +447,9 @@ class FrequencyEntityBuilder
 
   @override
   void replace(FrequencyEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$FrequencyEntity;
   }
 

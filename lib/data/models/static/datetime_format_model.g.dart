@@ -9,10 +9,15 @@ part of 'datetime_format_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<DatetimeFormatListResponse> _$datetimeFormatListResponseSerializer =
     new _$DatetimeFormatListResponseSerializer();
@@ -33,7 +38,7 @@ class _$DatetimeFormatListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, DatetimeFormatListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -47,7 +52,7 @@ class _$DatetimeFormatListResponseSerializer
   @override
   DatetimeFormatListResponse deserialize(
       Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new DatetimeFormatListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -81,7 +86,7 @@ class _$DatetimeFormatItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, DatetimeFormatItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -94,7 +99,7 @@ class _$DatetimeFormatItemResponseSerializer
   @override
   DatetimeFormatItemResponse deserialize(
       Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new DatetimeFormatItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -127,7 +132,7 @@ class _$DatetimeFormatEntitySerializer
 
   @override
   Iterable serialize(Serializers serializers, DatetimeFormatEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
@@ -141,7 +146,7 @@ class _$DatetimeFormatEntitySerializer
 
   @override
   DatetimeFormatEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new DatetimeFormatEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -174,8 +179,9 @@ class _$DatetimeFormatListResponse extends DatetimeFormatListResponse {
       (new DatetimeFormatListResponseBuilder()..update(updates)).build();
 
   _$DatetimeFormatListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('DatetimeFormatListResponse', 'data');
+    }
   }
 
   @override
@@ -188,10 +194,9 @@ class _$DatetimeFormatListResponse extends DatetimeFormatListResponse {
       new DatetimeFormatListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! DatetimeFormatListResponse) return false;
-    return data == other.data;
+    return other is DatetimeFormatListResponse && data == other.data;
   }
 
   @override
@@ -229,7 +234,9 @@ class DatetimeFormatListResponseBuilder
 
   @override
   void replace(DatetimeFormatListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$DatetimeFormatListResponse;
   }
 
@@ -268,8 +275,9 @@ class _$DatetimeFormatItemResponse extends DatetimeFormatItemResponse {
       (new DatetimeFormatItemResponseBuilder()..update(updates)).build();
 
   _$DatetimeFormatItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('DatetimeFormatItemResponse', 'data');
+    }
   }
 
   @override
@@ -282,10 +290,9 @@ class _$DatetimeFormatItemResponse extends DatetimeFormatItemResponse {
       new DatetimeFormatItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! DatetimeFormatItemResponse) return false;
-    return data == other.data;
+    return other is DatetimeFormatItemResponse && data == other.data;
   }
 
   @override
@@ -323,7 +330,9 @@ class DatetimeFormatItemResponseBuilder
 
   @override
   void replace(DatetimeFormatItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$DatetimeFormatItemResponse;
   }
 
@@ -364,10 +373,12 @@ class _$DatetimeFormatEntity extends DatetimeFormatEntity {
       (new DatetimeFormatEntityBuilder()..update(updates)).build();
 
   _$DatetimeFormatEntity._({this.id, this.format}) : super._() {
-    if (id == null)
+    if (id == null) {
       throw new BuiltValueNullFieldError('DatetimeFormatEntity', 'id');
-    if (format == null)
+    }
+    if (format == null) {
       throw new BuiltValueNullFieldError('DatetimeFormatEntity', 'format');
+    }
   }
 
   @override
@@ -379,10 +390,11 @@ class _$DatetimeFormatEntity extends DatetimeFormatEntity {
       new DatetimeFormatEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! DatetimeFormatEntity) return false;
-    return id == other.id && format == other.format;
+    return other is DatetimeFormatEntity &&
+        id == other.id &&
+        format == other.format;
   }
 
   @override
@@ -424,7 +436,9 @@ class DatetimeFormatEntityBuilder
 
   @override
   void replace(DatetimeFormatEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$DatetimeFormatEntity;
   }
 

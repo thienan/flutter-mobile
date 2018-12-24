@@ -6,9 +6,16 @@ import 'package:invoiceninja_flutter/redux/auth/auth_state.dart';
 Reducer<AuthState> authReducer = combineReducers([
   TypedReducer<AuthState, UserLoginLoaded>(userLoginLoadedReducer),
   TypedReducer<AuthState, UserLoginRequest>(userLoginRequestReducer),
+  TypedReducer<AuthState, OAuthLoginRequest>(oauthLoginRequestReducer),
   TypedReducer<AuthState, UserLoginSuccess>(userLoginSuccessReducer),
   TypedReducer<AuthState, UserLoginFailure>(userLoginFailureReducer),
+  TypedReducer<AuthState, ClearAuthError>(clearAuthErrorReducer),
 ]);
+
+AuthState clearAuthErrorReducer(
+    AuthState authState, ClearAuthError action) {
+  return authState.rebuild((b) => b..error = null);
+}
 
 AuthState userLoginLoadedReducer(AuthState authState, UserLoginLoaded action) {
   return authState.rebuild((b) => b
@@ -26,6 +33,14 @@ AuthState userLoginRequestReducer(
     ..secret = action.secret
     ..email = action.email
     ..password = action.password);
+}
+
+AuthState oauthLoginRequestReducer(
+    AuthState authState, OAuthLoginRequest action) {
+  return authState.rebuild((b) => b
+    ..error = null
+    ..url = formatApiUrlMachine(action.url)
+    ..secret = action.secret);
 }
 
 AuthState userLoginSuccessReducer(

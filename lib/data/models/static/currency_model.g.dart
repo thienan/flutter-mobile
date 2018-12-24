@@ -9,10 +9,15 @@ part of 'currency_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<CurrencyListResponse> _$currencyListResponseSerializer =
     new _$CurrencyListResponseSerializer();
@@ -33,7 +38,7 @@ class _$CurrencyListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, CurrencyListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -46,7 +51,7 @@ class _$CurrencyListResponseSerializer
 
   @override
   CurrencyListResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new CurrencyListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -80,7 +85,7 @@ class _$CurrencyItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, CurrencyItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -92,7 +97,7 @@ class _$CurrencyItemResponseSerializer
 
   @override
   CurrencyItemResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new CurrencyItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -121,7 +126,7 @@ class _$CurrencyEntitySerializer
 
   @override
   Iterable serialize(Serializers serializers, CurrencyEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
@@ -161,7 +166,7 @@ class _$CurrencyEntitySerializer
 
   @override
   CurrencyEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new CurrencyEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -222,8 +227,9 @@ class _$CurrencyListResponse extends CurrencyListResponse {
       (new CurrencyListResponseBuilder()..update(updates)).build();
 
   _$CurrencyListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('CurrencyListResponse', 'data');
+    }
   }
 
   @override
@@ -235,10 +241,9 @@ class _$CurrencyListResponse extends CurrencyListResponse {
       new CurrencyListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! CurrencyListResponse) return false;
-    return data == other.data;
+    return other is CurrencyListResponse && data == other.data;
   }
 
   @override
@@ -275,7 +280,9 @@ class CurrencyListResponseBuilder
 
   @override
   void replace(CurrencyListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$CurrencyListResponse;
   }
 
@@ -314,8 +321,9 @@ class _$CurrencyItemResponse extends CurrencyItemResponse {
       (new CurrencyItemResponseBuilder()..update(updates)).build();
 
   _$CurrencyItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('CurrencyItemResponse', 'data');
+    }
   }
 
   @override
@@ -327,10 +335,9 @@ class _$CurrencyItemResponse extends CurrencyItemResponse {
       new CurrencyItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! CurrencyItemResponse) return false;
-    return data == other.data;
+    return other is CurrencyItemResponse && data == other.data;
   }
 
   @override
@@ -367,7 +374,9 @@ class CurrencyItemResponseBuilder
 
   @override
   void replace(CurrencyItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$CurrencyItemResponse;
   }
 
@@ -431,21 +440,28 @@ class _$CurrencyEntity extends CurrencyEntity {
       this.exchangeRate,
       this.id})
       : super._() {
-    if (name == null)
+    if (name == null) {
       throw new BuiltValueNullFieldError('CurrencyEntity', 'name');
-    if (symbol == null)
+    }
+    if (symbol == null) {
       throw new BuiltValueNullFieldError('CurrencyEntity', 'symbol');
-    if (precision == null)
+    }
+    if (precision == null) {
       throw new BuiltValueNullFieldError('CurrencyEntity', 'precision');
-    if (thousandSeparator == null)
+    }
+    if (thousandSeparator == null) {
       throw new BuiltValueNullFieldError('CurrencyEntity', 'thousandSeparator');
-    if (decimalSeparator == null)
+    }
+    if (decimalSeparator == null) {
       throw new BuiltValueNullFieldError('CurrencyEntity', 'decimalSeparator');
-    if (code == null)
+    }
+    if (code == null) {
       throw new BuiltValueNullFieldError('CurrencyEntity', 'code');
-    if (swapCurrencySymbol == null)
+    }
+    if (swapCurrencySymbol == null) {
       throw new BuiltValueNullFieldError(
           'CurrencyEntity', 'swapCurrencySymbol');
+    }
   }
 
   @override
@@ -457,10 +473,10 @@ class _$CurrencyEntity extends CurrencyEntity {
       new CurrencyEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! CurrencyEntity) return false;
-    return name == other.name &&
+    return other is CurrencyEntity &&
+        name == other.name &&
         symbol == other.symbol &&
         precision == other.precision &&
         thousandSeparator == other.thousandSeparator &&
@@ -568,7 +584,9 @@ class CurrencyEntityBuilder
 
   @override
   void replace(CurrencyEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$CurrencyEntity;
   }
 

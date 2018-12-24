@@ -9,10 +9,15 @@ part of 'project_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<ProjectListResponse> _$projectListResponseSerializer =
     new _$ProjectListResponseSerializer();
@@ -33,7 +38,7 @@ class _$ProjectListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, ProjectListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -46,7 +51,7 @@ class _$ProjectListResponseSerializer
 
   @override
   ProjectListResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ProjectListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -80,7 +85,7 @@ class _$ProjectItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, ProjectItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -92,7 +97,7 @@ class _$ProjectItemResponseSerializer
 
   @override
   ProjectItemResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ProjectItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -120,7 +125,7 @@ class _$ProjectEntitySerializer implements StructuredSerializer<ProjectEntity> {
 
   @override
   Iterable serialize(Serializers serializers, ProjectEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
@@ -170,6 +175,12 @@ class _$ProjectEntitySerializer implements StructuredSerializer<ProjectEntity> {
         ..add(serializers.serialize(object.isDeleted,
             specifiedType: const FullType(bool)));
     }
+    if (object.isOwner != null) {
+      result
+        ..add('is_owner')
+        ..add(serializers.serialize(object.isOwner,
+            specifiedType: const FullType(bool)));
+    }
     if (object.id != null) {
       result
         ..add('id')
@@ -182,7 +193,7 @@ class _$ProjectEntitySerializer implements StructuredSerializer<ProjectEntity> {
 
   @override
   ProjectEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ProjectEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -239,6 +250,10 @@ class _$ProjectEntitySerializer implements StructuredSerializer<ProjectEntity> {
           result.isDeleted = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'is_owner':
+          result.isOwner = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
         case 'id':
           result.id = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
@@ -258,8 +273,9 @@ class _$ProjectListResponse extends ProjectListResponse {
       (new ProjectListResponseBuilder()..update(updates)).build();
 
   _$ProjectListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('ProjectListResponse', 'data');
+    }
   }
 
   @override
@@ -271,10 +287,9 @@ class _$ProjectListResponse extends ProjectListResponse {
       new ProjectListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ProjectListResponse) return false;
-    return data == other.data;
+    return other is ProjectListResponse && data == other.data;
   }
 
   @override
@@ -311,7 +326,9 @@ class ProjectListResponseBuilder
 
   @override
   void replace(ProjectListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ProjectListResponse;
   }
 
@@ -349,8 +366,9 @@ class _$ProjectItemResponse extends ProjectItemResponse {
       (new ProjectItemResponseBuilder()..update(updates)).build();
 
   _$ProjectItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('ProjectItemResponse', 'data');
+    }
   }
 
   @override
@@ -362,10 +380,9 @@ class _$ProjectItemResponse extends ProjectItemResponse {
       new ProjectItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ProjectItemResponse) return false;
-    return data == other.data;
+    return other is ProjectItemResponse && data == other.data;
   }
 
   @override
@@ -401,7 +418,9 @@ class ProjectItemResponseBuilder
 
   @override
   void replace(ProjectItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ProjectItemResponse;
   }
 
@@ -457,6 +476,8 @@ class _$ProjectEntity extends ProjectEntity {
   @override
   final bool isDeleted;
   @override
+  final bool isOwner;
+  @override
   final int id;
 
   factory _$ProjectEntity([void updates(ProjectEntityBuilder b)]) =>
@@ -475,24 +496,33 @@ class _$ProjectEntity extends ProjectEntity {
       this.updatedAt,
       this.archivedAt,
       this.isDeleted,
+      this.isOwner,
       this.id})
       : super._() {
-    if (name == null)
+    if (name == null) {
       throw new BuiltValueNullFieldError('ProjectEntity', 'name');
-    if (clientId == null)
+    }
+    if (clientId == null) {
       throw new BuiltValueNullFieldError('ProjectEntity', 'clientId');
-    if (taskRate == null)
+    }
+    if (taskRate == null) {
       throw new BuiltValueNullFieldError('ProjectEntity', 'taskRate');
-    if (dueDate == null)
+    }
+    if (dueDate == null) {
       throw new BuiltValueNullFieldError('ProjectEntity', 'dueDate');
-    if (privateNotes == null)
+    }
+    if (privateNotes == null) {
       throw new BuiltValueNullFieldError('ProjectEntity', 'privateNotes');
-    if (budgetedHours == null)
+    }
+    if (budgetedHours == null) {
       throw new BuiltValueNullFieldError('ProjectEntity', 'budgetedHours');
-    if (customValue1 == null)
+    }
+    if (customValue1 == null) {
       throw new BuiltValueNullFieldError('ProjectEntity', 'customValue1');
-    if (customValue2 == null)
+    }
+    if (customValue2 == null) {
       throw new BuiltValueNullFieldError('ProjectEntity', 'customValue2');
+    }
   }
 
   @override
@@ -503,10 +533,10 @@ class _$ProjectEntity extends ProjectEntity {
   ProjectEntityBuilder toBuilder() => new ProjectEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ProjectEntity) return false;
-    return name == other.name &&
+    return other is ProjectEntity &&
+        name == other.name &&
         clientId == other.clientId &&
         taskRate == other.taskRate &&
         dueDate == other.dueDate &&
@@ -518,6 +548,7 @@ class _$ProjectEntity extends ProjectEntity {
         updatedAt == other.updatedAt &&
         archivedAt == other.archivedAt &&
         isDeleted == other.isDeleted &&
+        isOwner == other.isOwner &&
         id == other.id;
   }
 
@@ -534,18 +565,20 @@ class _$ProjectEntity extends ProjectEntity {
                                     $jc(
                                         $jc(
                                             $jc(
-                                                $jc($jc(0, name.hashCode),
-                                                    clientId.hashCode),
-                                                taskRate.hashCode),
-                                            dueDate.hashCode),
-                                        privateNotes.hashCode),
-                                    budgetedHours.hashCode),
-                                customValue1.hashCode),
-                            customValue2.hashCode),
-                        createdAt.hashCode),
-                    updatedAt.hashCode),
-                archivedAt.hashCode),
-            isDeleted.hashCode),
+                                                $jc(
+                                                    $jc($jc(0, name.hashCode),
+                                                        clientId.hashCode),
+                                                    taskRate.hashCode),
+                                                dueDate.hashCode),
+                                            privateNotes.hashCode),
+                                        budgetedHours.hashCode),
+                                    customValue1.hashCode),
+                                customValue2.hashCode),
+                            createdAt.hashCode),
+                        updatedAt.hashCode),
+                    archivedAt.hashCode),
+                isDeleted.hashCode),
+            isOwner.hashCode),
         id.hashCode));
   }
 
@@ -564,6 +597,7 @@ class _$ProjectEntity extends ProjectEntity {
           ..add('updatedAt', updatedAt)
           ..add('archivedAt', archivedAt)
           ..add('isDeleted', isDeleted)
+          ..add('isOwner', isOwner)
           ..add('id', id))
         .toString();
   }
@@ -622,6 +656,10 @@ class ProjectEntityBuilder
   bool get isDeleted => _$this._isDeleted;
   set isDeleted(bool isDeleted) => _$this._isDeleted = isDeleted;
 
+  bool _isOwner;
+  bool get isOwner => _$this._isOwner;
+  set isOwner(bool isOwner) => _$this._isOwner = isOwner;
+
   int _id;
   int get id => _$this._id;
   set id(int id) => _$this._id = id;
@@ -642,6 +680,7 @@ class ProjectEntityBuilder
       _updatedAt = _$v.updatedAt;
       _archivedAt = _$v.archivedAt;
       _isDeleted = _$v.isDeleted;
+      _isOwner = _$v.isOwner;
       _id = _$v.id;
       _$v = null;
     }
@@ -650,7 +689,9 @@ class ProjectEntityBuilder
 
   @override
   void replace(ProjectEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ProjectEntity;
   }
 
@@ -675,6 +716,7 @@ class ProjectEntityBuilder
             updatedAt: updatedAt,
             archivedAt: archivedAt,
             isDeleted: isDeleted,
+            isOwner: isOwner,
             id: id);
     replace(_$result);
     return _$result;

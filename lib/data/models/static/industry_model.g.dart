@@ -9,10 +9,15 @@ part of 'industry_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<IndustryListResponse> _$industryListResponseSerializer =
     new _$IndustryListResponseSerializer();
@@ -33,7 +38,7 @@ class _$IndustryListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, IndustryListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -46,7 +51,7 @@ class _$IndustryListResponseSerializer
 
   @override
   IndustryListResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new IndustryListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -80,7 +85,7 @@ class _$IndustryItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, IndustryItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -92,7 +97,7 @@ class _$IndustryItemResponseSerializer
 
   @override
   IndustryItemResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new IndustryItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -121,20 +126,24 @@ class _$IndustryEntitySerializer
 
   @override
   Iterable serialize(Serializers serializers, IndustryEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
+    if (object.id != null) {
+      result
+        ..add('id')
+        ..add(serializers.serialize(object.id,
+            specifiedType: const FullType(int)));
+    }
 
     return result;
   }
 
   @override
   IndustryEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new IndustryEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -143,13 +152,13 @@ class _$IndustryEntitySerializer
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
-        case 'id':
-          result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
         case 'name':
           result.name = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
+          break;
+        case 'id':
+          result.id = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
           break;
       }
     }
@@ -167,8 +176,9 @@ class _$IndustryListResponse extends IndustryListResponse {
       (new IndustryListResponseBuilder()..update(updates)).build();
 
   _$IndustryListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('IndustryListResponse', 'data');
+    }
   }
 
   @override
@@ -180,10 +190,9 @@ class _$IndustryListResponse extends IndustryListResponse {
       new IndustryListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! IndustryListResponse) return false;
-    return data == other.data;
+    return other is IndustryListResponse && data == other.data;
   }
 
   @override
@@ -220,7 +229,9 @@ class IndustryListResponseBuilder
 
   @override
   void replace(IndustryListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$IndustryListResponse;
   }
 
@@ -259,8 +270,9 @@ class _$IndustryItemResponse extends IndustryItemResponse {
       (new IndustryItemResponseBuilder()..update(updates)).build();
 
   _$IndustryItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('IndustryItemResponse', 'data');
+    }
   }
 
   @override
@@ -272,10 +284,9 @@ class _$IndustryItemResponse extends IndustryItemResponse {
       new IndustryItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! IndustryItemResponse) return false;
-    return data == other.data;
+    return other is IndustryItemResponse && data == other.data;
   }
 
   @override
@@ -312,7 +323,9 @@ class IndustryItemResponseBuilder
 
   @override
   void replace(IndustryItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$IndustryItemResponse;
   }
 
@@ -344,17 +357,17 @@ class IndustryItemResponseBuilder
 
 class _$IndustryEntity extends IndustryEntity {
   @override
-  final int id;
-  @override
   final String name;
+  @override
+  final int id;
 
   factory _$IndustryEntity([void updates(IndustryEntityBuilder b)]) =>
       (new IndustryEntityBuilder()..update(updates)).build();
 
-  _$IndustryEntity._({this.id, this.name}) : super._() {
-    if (id == null) throw new BuiltValueNullFieldError('IndustryEntity', 'id');
-    if (name == null)
+  _$IndustryEntity._({this.name, this.id}) : super._() {
+    if (name == null) {
       throw new BuiltValueNullFieldError('IndustryEntity', 'name');
+    }
   }
 
   @override
@@ -366,22 +379,21 @@ class _$IndustryEntity extends IndustryEntity {
       new IndustryEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! IndustryEntity) return false;
-    return id == other.id && name == other.name;
+    return other is IndustryEntity && name == other.name && id == other.id;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, id.hashCode), name.hashCode));
+    return $jf($jc($jc(0, name.hashCode), id.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('IndustryEntity')
-          ..add('id', id)
-          ..add('name', name))
+          ..add('name', name)
+          ..add('id', id))
         .toString();
   }
 }
@@ -390,20 +402,20 @@ class IndustryEntityBuilder
     implements Builder<IndustryEntity, IndustryEntityBuilder> {
   _$IndustryEntity _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
-
   String _name;
   String get name => _$this._name;
   set name(String name) => _$this._name = name;
+
+  int _id;
+  int get id => _$this._id;
+  set id(int id) => _$this._id = id;
 
   IndustryEntityBuilder();
 
   IndustryEntityBuilder get _$this {
     if (_$v != null) {
-      _id = _$v.id;
       _name = _$v.name;
+      _id = _$v.id;
       _$v = null;
     }
     return this;
@@ -411,7 +423,9 @@ class IndustryEntityBuilder
 
   @override
   void replace(IndustryEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$IndustryEntity;
   }
 
@@ -422,7 +436,7 @@ class IndustryEntityBuilder
 
   @override
   _$IndustryEntity build() {
-    final _$result = _$v ?? new _$IndustryEntity._(id: id, name: name);
+    final _$result = _$v ?? new _$IndustryEntity._(name: name, id: id);
     replace(_$result);
     return _$result;
   }

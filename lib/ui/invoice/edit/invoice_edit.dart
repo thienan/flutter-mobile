@@ -2,19 +2,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:invoiceninja_flutter/ui/invoice/edit/invoice_edit_details_vm.dart';
 import 'package:invoiceninja_flutter/ui/invoice/edit/invoice_edit_items_vm.dart';
+import 'package:invoiceninja_flutter/ui/invoice/edit/invoice_edit_notes_vm.dart';
 import 'package:invoiceninja_flutter/ui/invoice/edit/invoice_edit_vm.dart';
 import 'package:invoiceninja_flutter/ui/invoice/edit/invoice_item_selector.dart';
+import 'package:invoiceninja_flutter/ui/quote/edit/quote_edit_details_vm.dart';
+import 'package:invoiceninja_flutter/ui/quote/edit/quote_edit_items_vm.dart';
+import 'package:invoiceninja_flutter/ui/quote/edit/quote_edit_notes_vm.dart';
 import 'package:invoiceninja_flutter/utils/formatting.dart';
 import 'package:invoiceninja_flutter/utils/localization.dart';
-import 'package:invoiceninja_flutter/ui/app/buttons/save_icon_button.dart';
+import 'package:invoiceninja_flutter/ui/app/buttons/refresh_icon_button.dart';
 
 class InvoiceEdit extends StatefulWidget {
-  final InvoiceEditVM viewModel;
-
   const InvoiceEdit({
     Key key,
     @required this.viewModel,
   }) : super(key: key);
+
+  final EntityEditVM viewModel;
 
   @override
   _InvoiceEditState createState() => _InvoiceEditState();
@@ -27,6 +31,7 @@ class _InvoiceEditState extends State<InvoiceEdit>
 
   static const kDetailsScreen = 0;
   static const kItemScreen = 1;
+  static const kNotesScreen = 2;
 
   @override
   void initState() {
@@ -35,10 +40,10 @@ class _InvoiceEditState extends State<InvoiceEdit>
     final invoice = widget.viewModel.invoice;
     final invoiceItem = widget.viewModel.invoiceItem;
 
-    final index =
-        invoice.invoiceItems.contains(invoiceItem) ? kItemScreen : kDetailsScreen;
-    _controller =
-        TabController(vsync: this, length: 2, initialIndex: index);
+    final index = invoice.invoiceItems.contains(invoiceItem)
+        ? kItemScreen
+        : kDetailsScreen;
+    _controller = TabController(vsync: this, length: 3, initialIndex: index);
   }
 
   @override
@@ -61,10 +66,12 @@ class _InvoiceEditState extends State<InvoiceEdit>
       child: Scaffold(
         appBar: AppBar(
           title: Text(invoice.isNew
-              ? localization.newInvoice
-              : '${localization.invoice} ${viewModel.origInvoice.invoiceNumber}'),
+              ? invoice.isQuote ? localization.newQuote : localization.newInvoice
+              : invoice.isQuote ? localization.editQuote: localization.editInvoice),
           actions: <Widget>[
-            SaveIconButton(
+            RefreshIconButton(
+              icon: Icons.cloud_upload,
+              tooltip: localization.save,
               isVisible: !invoice.isDeleted,
               isSaving: widget.viewModel.isSaving,
               isDirty: invoice.isNew || invoice != viewModel.origInvoice,
@@ -87,6 +94,9 @@ class _InvoiceEditState extends State<InvoiceEdit>
               Tab(
                 text: localization.items,
               ),
+              Tab(
+                text: localization.notes,
+              ),
             ],
           ),
         ),
@@ -94,10 +104,17 @@ class _InvoiceEditState extends State<InvoiceEdit>
           key: _formKey,
           child: TabBarView(
             controller: _controller,
-            children: <Widget>[
-              InvoiceEditDetailsScreen(),
-              InvoiceEditItemsScreen(),
-            ],
+            children: invoice.isQuote
+                ? <Widget>[
+                    QuoteEditDetailsScreen(),
+                    QuoteEditItemsScreen(),
+                    QuoteEditNotesScreen(),
+                  ]
+                : <Widget>[
+                    InvoiceEditDetailsScreen(),
+                    InvoiceEditItemsScreen(),
+                    InvoiceEditNotesScreen(),
+                  ],
           ),
         ),
         bottomNavigationBar: BottomAppBar(

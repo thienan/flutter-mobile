@@ -4,6 +4,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:invoiceninja_flutter/data/models/models.dart';
 import 'package:invoiceninja_flutter/redux/app/app_state.dart';
 import 'package:invoiceninja_flutter/redux/invoice/invoice_actions.dart';
+import 'package:invoiceninja_flutter/redux/payment/payment_actions.dart';
+import 'package:invoiceninja_flutter/redux/quote/quote_actions.dart';
 import 'package:invoiceninja_flutter/ui/app/actions_menu_button.dart';
 import 'package:invoiceninja_flutter/ui/app/buttons/edit_icon_button.dart';
 import 'package:invoiceninja_flutter/ui/client/view/client_view_activity.dart';
@@ -13,12 +15,12 @@ import 'package:invoiceninja_flutter/ui/client/view/client_view_overview.dart';
 import 'package:invoiceninja_flutter/utils/localization.dart';
 
 class ClientView extends StatefulWidget {
-  final ClientViewVM viewModel;
-
   const ClientView({
     Key key,
     @required this.viewModel,
   }) : super(key: key);
+
+  final ClientViewVM viewModel;
 
   @override
   _ClientViewState createState() => _ClientViewState();
@@ -46,6 +48,8 @@ class _ClientViewState extends State<ClientView>
     final store = StoreProvider.of<AppState>(context);
     final viewModel = widget.viewModel;
     final client = viewModel.client;
+    final company = viewModel.company;
+    final user = company.user;
 
     return WillPopScope(
       onWillPop: () async {
@@ -62,50 +66,55 @@ class _ClientViewState extends State<ClientView>
           controller: _controller,
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme
-              .of(context)
-              .primaryColorDark,
+          backgroundColor: Theme.of(context).primaryColorDark,
           onPressed: () {
             showDialog<SimpleDialog>(
               context: context,
               builder: (BuildContext context) =>
                   SimpleDialog(children: <Widget>[
-                    ListTile(
-                      dense: true,
-                      leading: Icon(Icons.add_circle_outline),
-                      title: Text(localization.invoice),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        store.dispatch(EditInvoice(
-                            invoice: InvoiceEntity()
-                                .rebuild((b) => b.clientId = client.id),
-                            context: context));
-                      },
-                    ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(Icons.add_circle_outline),
-                      title: Text(localization.quote),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(Icons.add_circle_outline),
-                      title: Text(localization.payment),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(Icons.add_circle_outline),
-                      title: Text(localization.expense),
-                      onTap: () {},
-                    ),
-                    ListTile(
-                      dense: true,
-                      leading: Icon(Icons.add_circle_outline),
-                      title: Text(localization.task),
-                      onTap: () {},
-                    ),
+                    user.canCreate(EntityType.client)
+                        ? ListTile(
+                            //dense: true,
+                            leading: Icon(Icons.add_circle_outline),
+                            title: Text(localization.invoice),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              store.dispatch(EditInvoice(
+                                  invoice: InvoiceEntity()
+                                      .rebuild((b) => b.clientId = client.id),
+                                  context: context));
+                            },
+                          )
+                        : Container(),
+                    user.canCreate(EntityType.payment)
+                        ? ListTile(
+                            //dense: true,
+                            leading: Icon(Icons.add_circle_outline),
+                            title: Text(localization.payment),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              store.dispatch(EditPayment(
+                                  payment: PaymentEntity(company: company)
+                                      .rebuild((b) => b.clientId = client.id),
+                                  context: context));
+                            },
+                          )
+                        : Container(),
+                    company.isModuleEnabled(EntityType.quote) &&
+                            user.canCreate(EntityType.quote)
+                        ? ListTile(
+                            //dense: true,
+                            leading: Icon(Icons.add_circle_outline),
+                            title: Text(localization.quote),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              store.dispatch(EditQuote(
+                                  quote: InvoiceEntity(isQuote: true)
+                                      .rebuild((b) => b.clientId = client.id),
+                                  context: context));
+                            },
+                          )
+                        : Container(),
                   ]),
             );
           },
@@ -134,7 +143,6 @@ class CustomTabBarView extends StatefulWidget {
 }
 
 class _CustomTabBarViewState extends State<CustomTabBarView> {
-
   @override
   void initState() {
     super.initState();
@@ -150,7 +158,8 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
   void _onTabChange() {
     final viewModel = widget.viewModel;
 
-    if (widget.controller.index == 2 && viewModel.client.activities.isEmpty &&
+    if (widget.controller.index == 2 &&
+        viewModel.client.activities.isEmpty &&
         !viewModel.isLoading) {
       viewModel.onRefreshed(context, true);
     }
@@ -190,16 +199,17 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TabController controller;
 
   @override
-  final Size preferredSize = const Size(double.infinity, 100.0);
+  final Size preferredSize = const Size(double.infinity, kToolbarHeight * 2);
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalization.of(context);
     final client = viewModel.client;
+    final user = viewModel.company.user;
 
     return AppBar(
       title:
-      Text(client.displayName ?? ''), // Text(localizations.clientDetails),
+          Text(client.displayName ?? ''), // Text(localizations.clientDetails),
       bottom: TabBar(
         controller: controller,
         //isScrollable: true,
@@ -218,16 +228,20 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: client.isNew
           ? []
           : [
-        EditIconButton(
-          isVisible: !client.isDeleted,
-          onPressed: () => viewModel.onEditPressed(context),
-        ),
-        ActionMenuButton(
-          isSaving: viewModel.isSaving,
-          entity: client,
-          onSelected: viewModel.onActionSelected,
-        )
-      ],
+              user.canEditEntity(client)
+                  ? EditIconButton(
+                      isVisible: !client.isDeleted,
+                      onPressed: () => viewModel.onEditPressed(context),
+                    )
+                  : Container(),
+              ActionMenuButton(
+                user: viewModel.company.user,
+                isSaving: viewModel.isSaving,
+                entity: client,
+                onSelected: viewModel.onActionSelected,
+                entityActions: viewModel.client.getEntityActions(user: user),
+              )
+            ],
     );
   }
 }

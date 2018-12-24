@@ -9,10 +9,15 @@ part of 'ui_state.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<UIState> _$uIStateSerializer = new _$UIStateSerializer();
 
@@ -24,7 +29,7 @@ class _$UIStateSerializer implements StructuredSerializer<UIState> {
 
   @override
   Iterable serialize(Serializers serializers, UIState object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'selectedCompanyIndex',
       serializers.serialize(object.selectedCompanyIndex,
@@ -35,6 +40,15 @@ class _$UIStateSerializer implements StructuredSerializer<UIState> {
       'enableDarkMode',
       serializers.serialize(object.enableDarkMode,
           specifiedType: const FullType(bool)),
+      'requireAuthentication',
+      serializers.serialize(object.requireAuthentication,
+          specifiedType: const FullType(bool)),
+      'emailPayment',
+      serializers.serialize(object.emailPayment,
+          specifiedType: const FullType(bool)),
+      'dashboardUIState',
+      serializers.serialize(object.dashboardUIState,
+          specifiedType: const FullType(DashboardUIState)),
       'productUIState',
       serializers.serialize(object.productUIState,
           specifiedType: const FullType(ProductUIState)),
@@ -44,14 +58,26 @@ class _$UIStateSerializer implements StructuredSerializer<UIState> {
       'invoiceUIState',
       serializers.serialize(object.invoiceUIState,
           specifiedType: const FullType(InvoiceUIState)),
+      'paymentUIState',
+      serializers.serialize(object.paymentUIState,
+          specifiedType: const FullType(PaymentUIState)),
+      'quoteUIState',
+      serializers.serialize(object.quoteUIState,
+          specifiedType: const FullType(QuoteUIState)),
     ];
+    if (object.filter != null) {
+      result
+        ..add('filter')
+        ..add(serializers.serialize(object.filter,
+            specifiedType: const FullType(String)));
+    }
 
     return result;
   }
 
   @override
   UIState deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new UIStateBuilder();
 
     final iterator = serialized.iterator;
@@ -72,6 +98,19 @@ class _$UIStateSerializer implements StructuredSerializer<UIState> {
           result.enableDarkMode = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'requireAuthentication':
+          result.requireAuthentication = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'emailPayment':
+          result.emailPayment = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'dashboardUIState':
+          result.dashboardUIState.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(DashboardUIState))
+              as DashboardUIState);
+          break;
         case 'productUIState':
           result.productUIState.replace(serializers.deserialize(value,
               specifiedType: const FullType(ProductUIState)) as ProductUIState);
@@ -83,6 +122,18 @@ class _$UIStateSerializer implements StructuredSerializer<UIState> {
         case 'invoiceUIState':
           result.invoiceUIState.replace(serializers.deserialize(value,
               specifiedType: const FullType(InvoiceUIState)) as InvoiceUIState);
+          break;
+        case 'filter':
+          result.filter = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'paymentUIState':
+          result.paymentUIState.replace(serializers.deserialize(value,
+              specifiedType: const FullType(PaymentUIState)) as PaymentUIState);
+          break;
+        case 'quoteUIState':
+          result.quoteUIState.replace(serializers.deserialize(value,
+              specifiedType: const FullType(QuoteUIState)) as QuoteUIState);
           break;
       }
     }
@@ -99,11 +150,23 @@ class _$UIState extends UIState {
   @override
   final bool enableDarkMode;
   @override
+  final bool requireAuthentication;
+  @override
+  final bool emailPayment;
+  @override
+  final DashboardUIState dashboardUIState;
+  @override
   final ProductUIState productUIState;
   @override
   final ClientUIState clientUIState;
   @override
   final InvoiceUIState invoiceUIState;
+  @override
+  final String filter;
+  @override
+  final PaymentUIState paymentUIState;
+  @override
+  final QuoteUIState quoteUIState;
 
   factory _$UIState([void updates(UIStateBuilder b)]) =>
       (new UIStateBuilder()..update(updates)).build();
@@ -112,22 +175,49 @@ class _$UIState extends UIState {
       {this.selectedCompanyIndex,
       this.currentRoute,
       this.enableDarkMode,
+      this.requireAuthentication,
+      this.emailPayment,
+      this.dashboardUIState,
       this.productUIState,
       this.clientUIState,
-      this.invoiceUIState})
+      this.invoiceUIState,
+      this.filter,
+      this.paymentUIState,
+      this.quoteUIState})
       : super._() {
-    if (selectedCompanyIndex == null)
+    if (selectedCompanyIndex == null) {
       throw new BuiltValueNullFieldError('UIState', 'selectedCompanyIndex');
-    if (currentRoute == null)
+    }
+    if (currentRoute == null) {
       throw new BuiltValueNullFieldError('UIState', 'currentRoute');
-    if (enableDarkMode == null)
+    }
+    if (enableDarkMode == null) {
       throw new BuiltValueNullFieldError('UIState', 'enableDarkMode');
-    if (productUIState == null)
+    }
+    if (requireAuthentication == null) {
+      throw new BuiltValueNullFieldError('UIState', 'requireAuthentication');
+    }
+    if (emailPayment == null) {
+      throw new BuiltValueNullFieldError('UIState', 'emailPayment');
+    }
+    if (dashboardUIState == null) {
+      throw new BuiltValueNullFieldError('UIState', 'dashboardUIState');
+    }
+    if (productUIState == null) {
       throw new BuiltValueNullFieldError('UIState', 'productUIState');
-    if (clientUIState == null)
+    }
+    if (clientUIState == null) {
       throw new BuiltValueNullFieldError('UIState', 'clientUIState');
-    if (invoiceUIState == null)
+    }
+    if (invoiceUIState == null) {
       throw new BuiltValueNullFieldError('UIState', 'invoiceUIState');
+    }
+    if (paymentUIState == null) {
+      throw new BuiltValueNullFieldError('UIState', 'paymentUIState');
+    }
+    if (quoteUIState == null) {
+      throw new BuiltValueNullFieldError('UIState', 'quoteUIState');
+    }
   }
 
   @override
@@ -138,15 +228,21 @@ class _$UIState extends UIState {
   UIStateBuilder toBuilder() => new UIStateBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! UIState) return false;
-    return selectedCompanyIndex == other.selectedCompanyIndex &&
+    return other is UIState &&
+        selectedCompanyIndex == other.selectedCompanyIndex &&
         currentRoute == other.currentRoute &&
         enableDarkMode == other.enableDarkMode &&
+        requireAuthentication == other.requireAuthentication &&
+        emailPayment == other.emailPayment &&
+        dashboardUIState == other.dashboardUIState &&
         productUIState == other.productUIState &&
         clientUIState == other.clientUIState &&
-        invoiceUIState == other.invoiceUIState;
+        invoiceUIState == other.invoiceUIState &&
+        filter == other.filter &&
+        paymentUIState == other.paymentUIState &&
+        quoteUIState == other.quoteUIState;
   }
 
   @override
@@ -155,12 +251,28 @@ class _$UIState extends UIState {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc(0, selectedCompanyIndex.hashCode),
-                        currentRoute.hashCode),
-                    enableDarkMode.hashCode),
-                productUIState.hashCode),
-            clientUIState.hashCode),
-        invoiceUIState.hashCode));
+                    $jc(
+                        $jc(
+                            $jc(
+                                $jc(
+                                    $jc(
+                                        $jc(
+                                            $jc(
+                                                $jc(
+                                                    0,
+                                                    selectedCompanyIndex
+                                                        .hashCode),
+                                                currentRoute.hashCode),
+                                            enableDarkMode.hashCode),
+                                        requireAuthentication.hashCode),
+                                    emailPayment.hashCode),
+                                dashboardUIState.hashCode),
+                            productUIState.hashCode),
+                        clientUIState.hashCode),
+                    invoiceUIState.hashCode),
+                filter.hashCode),
+            paymentUIState.hashCode),
+        quoteUIState.hashCode));
   }
 
   @override
@@ -169,9 +281,15 @@ class _$UIState extends UIState {
           ..add('selectedCompanyIndex', selectedCompanyIndex)
           ..add('currentRoute', currentRoute)
           ..add('enableDarkMode', enableDarkMode)
+          ..add('requireAuthentication', requireAuthentication)
+          ..add('emailPayment', emailPayment)
+          ..add('dashboardUIState', dashboardUIState)
           ..add('productUIState', productUIState)
           ..add('clientUIState', clientUIState)
-          ..add('invoiceUIState', invoiceUIState))
+          ..add('invoiceUIState', invoiceUIState)
+          ..add('filter', filter)
+          ..add('paymentUIState', paymentUIState)
+          ..add('quoteUIState', quoteUIState))
         .toString();
   }
 }
@@ -193,6 +311,21 @@ class UIStateBuilder implements Builder<UIState, UIStateBuilder> {
   set enableDarkMode(bool enableDarkMode) =>
       _$this._enableDarkMode = enableDarkMode;
 
+  bool _requireAuthentication;
+  bool get requireAuthentication => _$this._requireAuthentication;
+  set requireAuthentication(bool requireAuthentication) =>
+      _$this._requireAuthentication = requireAuthentication;
+
+  bool _emailPayment;
+  bool get emailPayment => _$this._emailPayment;
+  set emailPayment(bool emailPayment) => _$this._emailPayment = emailPayment;
+
+  DashboardUIStateBuilder _dashboardUIState;
+  DashboardUIStateBuilder get dashboardUIState =>
+      _$this._dashboardUIState ??= new DashboardUIStateBuilder();
+  set dashboardUIState(DashboardUIStateBuilder dashboardUIState) =>
+      _$this._dashboardUIState = dashboardUIState;
+
   ProductUIStateBuilder _productUIState;
   ProductUIStateBuilder get productUIState =>
       _$this._productUIState ??= new ProductUIStateBuilder();
@@ -211,6 +344,22 @@ class UIStateBuilder implements Builder<UIState, UIStateBuilder> {
   set invoiceUIState(InvoiceUIStateBuilder invoiceUIState) =>
       _$this._invoiceUIState = invoiceUIState;
 
+  String _filter;
+  String get filter => _$this._filter;
+  set filter(String filter) => _$this._filter = filter;
+
+  PaymentUIStateBuilder _paymentUIState;
+  PaymentUIStateBuilder get paymentUIState =>
+      _$this._paymentUIState ??= new PaymentUIStateBuilder();
+  set paymentUIState(PaymentUIStateBuilder paymentUIState) =>
+      _$this._paymentUIState = paymentUIState;
+
+  QuoteUIStateBuilder _quoteUIState;
+  QuoteUIStateBuilder get quoteUIState =>
+      _$this._quoteUIState ??= new QuoteUIStateBuilder();
+  set quoteUIState(QuoteUIStateBuilder quoteUIState) =>
+      _$this._quoteUIState = quoteUIState;
+
   UIStateBuilder();
 
   UIStateBuilder get _$this {
@@ -218,9 +367,15 @@ class UIStateBuilder implements Builder<UIState, UIStateBuilder> {
       _selectedCompanyIndex = _$v.selectedCompanyIndex;
       _currentRoute = _$v.currentRoute;
       _enableDarkMode = _$v.enableDarkMode;
+      _requireAuthentication = _$v.requireAuthentication;
+      _emailPayment = _$v.emailPayment;
+      _dashboardUIState = _$v.dashboardUIState?.toBuilder();
       _productUIState = _$v.productUIState?.toBuilder();
       _clientUIState = _$v.clientUIState?.toBuilder();
       _invoiceUIState = _$v.invoiceUIState?.toBuilder();
+      _filter = _$v.filter;
+      _paymentUIState = _$v.paymentUIState?.toBuilder();
+      _quoteUIState = _$v.quoteUIState?.toBuilder();
       _$v = null;
     }
     return this;
@@ -228,7 +383,9 @@ class UIStateBuilder implements Builder<UIState, UIStateBuilder> {
 
   @override
   void replace(UIState other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$UIState;
   }
 
@@ -246,18 +403,31 @@ class UIStateBuilder implements Builder<UIState, UIStateBuilder> {
               selectedCompanyIndex: selectedCompanyIndex,
               currentRoute: currentRoute,
               enableDarkMode: enableDarkMode,
+              requireAuthentication: requireAuthentication,
+              emailPayment: emailPayment,
+              dashboardUIState: dashboardUIState.build(),
               productUIState: productUIState.build(),
               clientUIState: clientUIState.build(),
-              invoiceUIState: invoiceUIState.build());
+              invoiceUIState: invoiceUIState.build(),
+              filter: filter,
+              paymentUIState: paymentUIState.build(),
+              quoteUIState: quoteUIState.build());
     } catch (_) {
       String _$failedField;
       try {
+        _$failedField = 'dashboardUIState';
+        dashboardUIState.build();
         _$failedField = 'productUIState';
         productUIState.build();
         _$failedField = 'clientUIState';
         clientUIState.build();
         _$failedField = 'invoiceUIState';
         invoiceUIState.build();
+
+        _$failedField = 'paymentUIState';
+        paymentUIState.build();
+        _$failedField = 'quoteUIState';
+        quoteUIState.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'UIState', _$failedField, e.toString());

@@ -8,47 +8,52 @@ import 'package:invoiceninja_flutter/redux/ui/list_ui_state.dart';
 
 part 'invoice_state.g.dart';
 
-abstract class InvoiceState implements Built<InvoiceState, InvoiceStateBuilder> {
-
+abstract class InvoiceState
+    implements Built<InvoiceState, InvoiceStateBuilder> {
   factory InvoiceState() {
     return _$InvoiceState._(
+      lastUpdated: 0,
       map: BuiltMap<int, InvoiceEntity>(),
       list: BuiltList<int>(),
     );
   }
+
   InvoiceState._();
 
   @nullable
   int get lastUpdated;
 
   BuiltMap<int, InvoiceEntity> get map;
+
   BuiltList<int> get list;
 
   bool get isStale {
-    if (! isLoaded) {
+    if (!isLoaded) {
       return true;
     }
 
-    return DateTime.now().millisecondsSinceEpoch - lastUpdated > kMillisecondsToRefreshData;
+    return DateTime.now().millisecondsSinceEpoch - lastUpdated >
+        kMillisecondsToRefreshData;
   }
 
-  bool get isLoaded {
-    return lastUpdated != null;
-  }
+  bool get isLoaded => lastUpdated != null && lastUpdated > 0;
 
   static Serializer<InvoiceState> get serializer => _$invoiceStateSerializer;
 }
 
-abstract class InvoiceUIState extends Object with EntityUIState implements Built<InvoiceUIState, InvoiceUIStateBuilder> {
-
+abstract class InvoiceUIState extends Object
+    with EntityUIState
+    implements Built<InvoiceUIState, InvoiceUIStateBuilder> {
   factory InvoiceUIState() {
     return _$InvoiceUIState._(
-      listUIState: ListUIState(InvoiceFields.invoiceNumber),
+      listUIState:
+          ListUIState(InvoiceFields.invoiceNumber, sortAscending: false),
       editing: InvoiceEntity(),
       editingItem: InvoiceItemEntity(),
       selectedId: 0,
     );
   }
+
   InvoiceUIState._();
 
   @nullable
@@ -60,5 +65,6 @@ abstract class InvoiceUIState extends Object with EntityUIState implements Built
   @override
   bool get isCreatingNew => editing.isNew;
 
-  static Serializer<InvoiceUIState> get serializer => _$invoiceUIStateSerializer;
+  static Serializer<InvoiceUIState> get serializer =>
+      _$invoiceUIStateSerializer;
 }

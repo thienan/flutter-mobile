@@ -9,10 +9,15 @@ part of 'product_state.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<ProductState> _$productStateSerializer =
     new _$ProductStateSerializer();
@@ -27,7 +32,7 @@ class _$ProductStateSerializer implements StructuredSerializer<ProductState> {
 
   @override
   Iterable serialize(Serializers serializers, ProductState object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'map',
       serializers.serialize(object.map,
@@ -50,7 +55,7 @@ class _$ProductStateSerializer implements StructuredSerializer<ProductState> {
 
   @override
   ProductState deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ProductStateBuilder();
 
     final iterator = serialized.iterator;
@@ -92,7 +97,7 @@ class _$ProductUIStateSerializer
 
   @override
   Iterable serialize(Serializers serializers, ProductUIState object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'selectedId',
       serializers.serialize(object.selectedId,
@@ -113,7 +118,7 @@ class _$ProductUIStateSerializer
 
   @override
   ProductUIState deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ProductUIStateBuilder();
 
     final iterator = serialized.iterator;
@@ -153,9 +158,12 @@ class _$ProductState extends ProductState {
       (new ProductStateBuilder()..update(updates)).build();
 
   _$ProductState._({this.lastUpdated, this.map, this.list}) : super._() {
-    if (map == null) throw new BuiltValueNullFieldError('ProductState', 'map');
-    if (list == null)
+    if (map == null) {
+      throw new BuiltValueNullFieldError('ProductState', 'map');
+    }
+    if (list == null) {
       throw new BuiltValueNullFieldError('ProductState', 'list');
+    }
   }
 
   @override
@@ -166,10 +174,10 @@ class _$ProductState extends ProductState {
   ProductStateBuilder toBuilder() => new ProductStateBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ProductState) return false;
-    return lastUpdated == other.lastUpdated &&
+    return other is ProductState &&
+        lastUpdated == other.lastUpdated &&
         map == other.map &&
         list == other.list;
   }
@@ -221,7 +229,9 @@ class ProductStateBuilder
 
   @override
   void replace(ProductState other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ProductState;
   }
 
@@ -268,10 +278,12 @@ class _$ProductUIState extends ProductUIState {
 
   _$ProductUIState._({this.editing, this.selectedId, this.listUIState})
       : super._() {
-    if (selectedId == null)
+    if (selectedId == null) {
       throw new BuiltValueNullFieldError('ProductUIState', 'selectedId');
-    if (listUIState == null)
+    }
+    if (listUIState == null) {
       throw new BuiltValueNullFieldError('ProductUIState', 'listUIState');
+    }
   }
 
   @override
@@ -283,10 +295,10 @@ class _$ProductUIState extends ProductUIState {
       new ProductUIStateBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ProductUIState) return false;
-    return editing == other.editing &&
+    return other is ProductUIState &&
+        editing == other.editing &&
         selectedId == other.selectedId &&
         listUIState == other.listUIState;
   }
@@ -340,7 +352,9 @@ class ProductUIStateBuilder
 
   @override
   void replace(ProductUIState other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ProductUIState;
   }
 

@@ -6,17 +6,11 @@ import 'package:invoiceninja_flutter/data/models/models.dart';
 import 'package:invoiceninja_flutter/ui/app/dismissible_entity.dart';
 
 class ProductListItem extends StatelessWidget {
-  final DismissDirectionCallback onDismissed;
-  final GestureTapCallback onTap;
-  //final ValueChanged<bool> onCheckboxChanged;
-  final ProductEntity product;
-  final String filter;
-  
-  static final productItemKey = (int id) => Key('__product_item_${id}__');
-
   const ProductListItem({
-    @required this.onDismissed,
+    @required this.user,
+    @required this.onEntityAction,
     @required this.onTap,
+    @required this.onLongPress,
     //@required this.onCheckboxChanged,
     @required this.product,
     @required this.filter,
@@ -30,11 +24,12 @@ class ProductListItem extends StatelessWidget {
     final subtitle = filterMatch ?? product.notes;
 
     return DismissibleEntity(
+      user: user,
       entity: product,
-      onDismissed: onDismissed,
-      onTap: onTap,
+      onEntityAction: onEntityAction,
       child: ListTile(
         onTap: onTap,
+        onLongPress: onLongPress,
         /*
         leading: Checkbox(
           //key: NinjaKeys.productItemCheckbox(product.id),
@@ -64,16 +59,28 @@ class ProductListItem extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            subtitle != null && subtitle.isNotEmpty ?
-            Text(
-              subtitle,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ) : Container(),
+            subtitle != null && subtitle.isNotEmpty
+                ? Text(
+                    subtitle,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                : Container(),
             EntityStateLabel(product),
           ],
         ),
       ),
     );
   }
+
+  final UserEntity user;
+  final Function(EntityAction) onEntityAction;
+  final GestureTapCallback onTap;
+  final GestureTapCallback onLongPress;
+
+  //final ValueChanged<bool> onCheckboxChanged;
+  final ProductEntity product;
+  final String filter;
+
+  static final productItemKey = (int id) => Key('__product_item_${id}__');
 }

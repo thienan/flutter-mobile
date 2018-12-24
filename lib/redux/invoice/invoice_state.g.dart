@@ -9,10 +9,15 @@ part of 'invoice_state.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<InvoiceState> _$invoiceStateSerializer =
     new _$InvoiceStateSerializer();
@@ -27,7 +32,7 @@ class _$InvoiceStateSerializer implements StructuredSerializer<InvoiceState> {
 
   @override
   Iterable serialize(Serializers serializers, InvoiceState object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'map',
       serializers.serialize(object.map,
@@ -50,7 +55,7 @@ class _$InvoiceStateSerializer implements StructuredSerializer<InvoiceState> {
 
   @override
   InvoiceState deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new InvoiceStateBuilder();
 
     final iterator = serialized.iterator;
@@ -92,7 +97,7 @@ class _$InvoiceUIStateSerializer
 
   @override
   Iterable serialize(Serializers serializers, InvoiceUIState object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'selectedId',
       serializers.serialize(object.selectedId,
@@ -119,7 +124,7 @@ class _$InvoiceUIStateSerializer
 
   @override
   InvoiceUIState deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new InvoiceUIStateBuilder();
 
     final iterator = serialized.iterator;
@@ -164,9 +169,12 @@ class _$InvoiceState extends InvoiceState {
       (new InvoiceStateBuilder()..update(updates)).build();
 
   _$InvoiceState._({this.lastUpdated, this.map, this.list}) : super._() {
-    if (map == null) throw new BuiltValueNullFieldError('InvoiceState', 'map');
-    if (list == null)
+    if (map == null) {
+      throw new BuiltValueNullFieldError('InvoiceState', 'map');
+    }
+    if (list == null) {
       throw new BuiltValueNullFieldError('InvoiceState', 'list');
+    }
   }
 
   @override
@@ -177,10 +185,10 @@ class _$InvoiceState extends InvoiceState {
   InvoiceStateBuilder toBuilder() => new InvoiceStateBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! InvoiceState) return false;
-    return lastUpdated == other.lastUpdated &&
+    return other is InvoiceState &&
+        lastUpdated == other.lastUpdated &&
         map == other.map &&
         list == other.list;
   }
@@ -232,7 +240,9 @@ class InvoiceStateBuilder
 
   @override
   void replace(InvoiceState other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$InvoiceState;
   }
 
@@ -282,10 +292,12 @@ class _$InvoiceUIState extends InvoiceUIState {
   _$InvoiceUIState._(
       {this.editing, this.editingItem, this.selectedId, this.listUIState})
       : super._() {
-    if (selectedId == null)
+    if (selectedId == null) {
       throw new BuiltValueNullFieldError('InvoiceUIState', 'selectedId');
-    if (listUIState == null)
+    }
+    if (listUIState == null) {
       throw new BuiltValueNullFieldError('InvoiceUIState', 'listUIState');
+    }
   }
 
   @override
@@ -297,10 +309,10 @@ class _$InvoiceUIState extends InvoiceUIState {
       new InvoiceUIStateBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! InvoiceUIState) return false;
-    return editing == other.editing &&
+    return other is InvoiceUIState &&
+        editing == other.editing &&
         editingItem == other.editingItem &&
         selectedId == other.selectedId &&
         listUIState == other.listUIState;
@@ -365,7 +377,9 @@ class InvoiceUIStateBuilder
 
   @override
   void replace(InvoiceUIState other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$InvoiceUIState;
   }
 

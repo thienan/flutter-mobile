@@ -8,22 +8,26 @@ import 'package:invoiceninja_flutter/redux/client/client_actions.dart';
 import 'package:invoiceninja_flutter/redux/dashboard/dashboard_actions.dart';
 import 'package:invoiceninja_flutter/redux/invoice/invoice_actions.dart';
 import 'package:invoiceninja_flutter/redux/product/product_actions.dart';
-import 'package:invoiceninja_flutter/redux/ui/ui_actions.dart';
 import 'package:invoiceninja_flutter/ui/app/app_drawer_vm.dart';
 import 'package:invoiceninja_flutter/ui/settings/settings_screen.dart';
 import 'package:invoiceninja_flutter/utils/localization.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:invoiceninja_flutter/utils/platforms.dart';
 import 'package:redux/redux.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
+// STARTER: import - do not remove comment
+import 'package:invoiceninja_flutter/redux/payment/payment_actions.dart';
+import 'package:invoiceninja_flutter/redux/quote/quote_actions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppDrawer extends StatelessWidget {
-  final AppDrawerVM viewModel;
-
   const AppDrawer({
     Key key,
     @required this.viewModel,
   }) : super(key: key);
+
+  final AppDrawerVM viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -33,32 +37,52 @@ class AppDrawer extends StatelessWidget {
 
     final _singleCompany = Align(
       alignment: FractionalOffset.bottomLeft,
-      child: Text(viewModel.selectedCompany.name),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(viewModel.selectedCompany.name),
+          Text(viewModel.selectedCompany.user.email,
+              style: Theme.of(context).textTheme.caption)
+        ],
+      ),
     );
 
     final _multipleCompanies = Align(
       alignment: FractionalOffset.bottomLeft,
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          isDense: true,
-          value: viewModel.selectedCompanyIndex,
-          items: viewModel.companies
-              .where((CompanyEntity company) => company.name.isNotEmpty)
-              .map((CompanyEntity company) => DropdownMenuItem<String>(
-                    value:
-                        (viewModel.companies.indexOf(company) + 1).toString(),
-                    child: Text(company.name),
-                  ))
-              .toList(),
-          onChanged: (value) {
-            viewModel.onCompanyChanged(context, value);
-          },
-        ),
-      ),
+      child: viewModel.companies.isNotEmpty
+          ? DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: viewModel.selectedCompanyIndex,
+                items: viewModel.companies
+                    .map((CompanyEntity company) => DropdownMenuItem<String>(
+                          value: (viewModel.companies.indexOf(company) + 1)
+                              .toString(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(company.name),
+                              Text(company.user.email,
+                                  style: Theme.of(context).textTheme.caption),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  viewModel.onCompanyChanged(context, value);
+                },
+              ),
+            )
+          : Container(),
     );
 
     final Store<AppState> store = StoreProvider.of<AppState>(context);
     final NavigatorState navigator = Navigator.of(context);
+    final state = store.state;
+    final user = state.user;
+    final enableDarkMode = state.uiState.enableDarkMode;
+    final company = viewModel.selectedCompany;
+    final localization = AppLocalization.of(context);
 
     final ThemeData themeData = Theme.of(context);
     final TextStyle aboutTextStyle = themeData.textTheme.body2;
@@ -69,11 +93,20 @@ class AppDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           Container(
+            color: enableDarkMode ? Colors.white10 : Colors.grey[200],
             child: DrawerHeader(
                 child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
                   child: Center(
+                      /*
+                      child: viewModel.selectedCompany.logoUrl != null &&
+                              viewModel.selectedCompany.logoUrl.isNotEmpty
+                          ? Image.network(viewModel.selectedCompany.logoUrl)
+                          : Image.asset('assets/images/logo.png',
+                              width: 100.0, height: 100.0)),
+                              */
                       child: viewModel.selectedCompany.logoUrl != null &&
                               viewModel.selectedCompany.logoUrl.isNotEmpty
                           ? CachedNetworkImage(
@@ -94,23 +127,31 @@ class AppDrawer extends StatelessWidget {
                                 !viewModel.isLoading
                             ? _multipleCompanies
                             : _singleCompany),
+                    Opacity(
+                      opacity: viewModel.isLoading ? 1.0 : 0.0,
+                      child: SizedBox(
+                          child: CircularProgressIndicator(),
+                          width: 20.0,
+                          height: 20.0),
+                    )
                   ],
                 ),
               ],
             )),
-            color: Colors.white10,
           ),
+          user.isAdmin
+              ? DrawerTile(
+                  company: company,
+                  icon: FontAwesomeIcons.tachometerAlt,
+                  title: localization.dashboard,
+                  onTap: () => store.dispatch(ViewDashboard(context)),
+                )
+              : Container(),
           DrawerTile(
-            icon: FontAwesomeIcons.tachometerAlt,
-            title: AppLocalization.of(context).dashboard,
-            onTap: () {
-              navigator.pop();
-              store.dispatch(ViewDashboard(context));
-            },
-          ),
-          DrawerTile(
+            company: company,
+            entityType: EntityType.client,
             icon: FontAwesomeIcons.users,
-            title: AppLocalization.of(context).clients,
+            title: localization.clients,
             onTap: () => store.dispatch(ViewClientList(context)),
             onCreateTap: () {
               navigator.pop();
@@ -119,9 +160,13 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           DrawerTile(
+            company: company,
+            entityType: EntityType.product,
             icon: FontAwesomeIcons.cube,
-            title: AppLocalization.of(context).products,
-            onTap: () => store.dispatch(ViewProductList(context)),
+            title: localization.products,
+            onTap: () {
+              store.dispatch(ViewProductList(context));
+            },
             onCreateTap: () {
               navigator.pop();
               store.dispatch(
@@ -129,8 +174,10 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           DrawerTile(
-            icon: FontAwesomeIcons.filePdfO,
-            title: AppLocalization.of(context).invoices,
+            company: company,
+            entityType: EntityType.invoice,
+            icon: FontAwesomeIcons.filePdf,
+            title: localization.invoices,
             onTap: () => store.dispatch(ViewInvoiceList(context)),
             onCreateTap: () {
               navigator.pop();
@@ -138,12 +185,77 @@ class AppDrawer extends StatelessWidget {
                   EditInvoice(invoice: InvoiceEntity(), context: context));
             },
           ),
+          // STARTER: menu - do not remove comment
           DrawerTile(
-            icon: FontAwesomeIcons.cog,
-            title: AppLocalization.of(context).settings,
+            company: company,
+            entityType: EntityType.payment,
+            icon: FontAwesomeIcons.creditCard,
+            title: localization.payments,
+            onTap: () => store.dispatch(ViewPaymentList(context)),
+            onCreateTap: () {
+              navigator.pop();
+              store.dispatch(EditPayment(
+                  payment: PaymentEntity(company: company), context: context));
+            },
+          ),
+          DrawerTile(
+            company: company,
+            entityType: EntityType.quote,
+            icon: FontAwesomeIcons.fileAlt,
+            title: localization.quotes,
+            onTap: () => store.dispatch(ViewQuoteList(context)),
+            onCreateTap: () {
+              navigator.pop();
+              store.dispatch(EditQuote(
+                  quote: InvoiceEntity(isQuote: true), context: context));
+            },
+          ),
+          ListTile(
+            dense: true,
+            leading: Icon(FontAwesomeIcons.clock, size: 22.0),
+            title: Text('Task & Expenses'),
             onTap: () {
-              store.dispatch(UpdateCurrentRoute(SettingsScreen.route));
-              navigator.pushReplacementNamed(SettingsScreen.route);
+              showDialog<AlertDialog>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                      semanticLabel: 'Task & Expenses',
+                      title: Text('Task & Expenses'),
+                      content: RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              style: aboutTextStyle,
+                              text: localization.thanksForPatience + ' ',
+                            ),
+                            _LinkTextSpan(
+                              style: linkStyle,
+                              url: getLegacyAppURL(context),
+                              text: localization.legacyMobileApp,
+                            ),
+                            TextSpan(
+                              style: aboutTextStyle,
+                              text: '.',
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text(localization.ok.toUpperCase()),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ],
+                    ),
+              );
+            },
+          ),
+          DrawerTile(
+            company: company,
+            icon: FontAwesomeIcons.cog,
+            title: localization.settings,
+            onTap: () {
+              navigator.pop();
+              navigator.pushNamed(SettingsScreen.route);
             },
           ),
           AboutListTile(
@@ -154,7 +266,7 @@ class AppDrawer extends StatelessWidget {
               width: 40.0,
               height: 40.0,
             ),
-            applicationVersion: 'Version ' + kAppVersion + ' - BETA',
+            applicationVersion: 'Version ' + kAppVersion,
             applicationLegalese: '© 2018 Invoice Ninja',
             aboutBoxChildren: <Widget>[
               Padding(
@@ -164,17 +276,18 @@ class AppDrawer extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                         style: aboutTextStyle,
-                        text:
-                            'Thanks for trying out the beta! Please join us on the #mobile channel on ',
+                        text: localization.thankYouForUsingOurApp +
+                            '\n\n' +
+                            localization.ifYouLikeIt,
                       ),
                       _LinkTextSpan(
                         style: linkStyle,
-                        url: 'http://slack.invoiceninja.com',
-                        text: 'Slack',
+                        url: getAppURL(context),
+                        text: ' ' + localization.clickHere + ' ',
                       ),
                       TextSpan(
                         style: aboutTextStyle,
-                        text: ' to help make the app better.',
+                        text: localization.toRateIt,
                       ),
                     ],
                   ),
@@ -190,12 +303,16 @@ class AppDrawer extends StatelessWidget {
 
 class DrawerTile extends StatelessWidget {
   const DrawerTile({
-    this.icon,
-    this.title,
-    this.onTap,
+    @required this.company,
+    @required this.icon,
+    @required this.title,
+    @required this.onTap,
     this.onCreateTap,
+    this.entityType,
   });
 
+  final CompanyEntity company;
+  final EntityType entityType;
   final IconData icon;
   final String title;
   final Function onTap;
@@ -203,12 +320,20 @@ class DrawerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = company.user;
+
+    if (entityType != null && !user.canViewOrCreate(entityType)) {
+      return Container();
+    } else if (!company.isModuleEnabled(entityType)) {
+      return Container();
+    }
+
     return ListTile(
       dense: true,
       leading: Icon(icon, size: 22.0),
       title: Text(title),
-      onTap: () => onTap(),
-      trailing: onCreateTap == null
+      onTap: onTap,
+      trailing: onCreateTap == null || !user.canCreate(entityType)
           ? null
           : IconButton(
               icon: Icon(Icons.add_circle_outline),
@@ -219,10 +344,8 @@ class DrawerTile extends StatelessWidget {
 }
 
 /*
-'payments' => 'credit-card',
 'recurring_invoices' => 'files-o',
 'credits' => 'credit-card',
-'quotes' => 'file-text-o',
 'proposals' => 'th-large',
 'tasks' => 'clock-o',
 'expenses' => 'file-image-o',

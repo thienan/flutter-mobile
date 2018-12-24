@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:invoiceninja_flutter/ui/app/dialogs/error_dialog.dart';
-import 'package:invoiceninja_flutter/ui/app/snackbar_row.dart';
+import 'package:invoiceninja_flutter/utils/completers.dart';
 import 'package:invoiceninja_flutter/utils/localization.dart';
 import 'package:redux/redux.dart';
 import 'package:invoiceninja_flutter/data/models/models.dart';
@@ -20,7 +19,6 @@ class ProductListBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ProductListVM>(
-      //rebuildOnChange: true,
       converter: ProductListVM.fromStore,
       builder: (context, vm) {
         return ProductList(
@@ -32,81 +30,77 @@ class ProductListBuilder extends StatelessWidget {
 }
 
 class ProductListVM {
-  final List<int> productList;
-  final BuiltMap<int, ProductEntity> productMap;
-  final String filter;
-  final bool isLoading;
-  final bool isLoaded;
-  final Function(BuildContext, ProductEntity) onProductTap;
-  final Function(BuildContext, ProductEntity, DismissDirection) onDismissed;
-  final Function(BuildContext) onRefreshed;
-
   ProductListVM({
+    @required this.user,
     @required this.productList,
     @required this.productMap,
     @required this.filter,
     @required this.isLoading,
     @required this.isLoaded,
     @required this.onProductTap,
-    @required this.onDismissed,
     @required this.onRefreshed,
+    @required this.onEntityAction,
   });
 
   static ProductListVM fromStore(Store<AppState> store) {
-      Future<Null> _handleRefresh(BuildContext context) {
-        final Completer<Null> completer = Completer<Null>();
-        store.dispatch(LoadProducts(completer, true));
-        return completer.future.then((_) {
-          Scaffold.of(context).showSnackBar(SnackBar(
-              content: SnackBarRow(
-                message: AppLocalization.of(context).refreshComplete,
-              )));
-        });
+    Future<Null> _handleRefresh(BuildContext context) {
+      if (store.state.isLoading) {
+        return Future<Null>(null);
       }
+      final completer = snackBarCompleter(
+          context, AppLocalization.of(context).refreshComplete);
+      store.dispatch(LoadProducts(completer: completer, force: true));
+      return completer.future;
+    }
+
+    final state = store.state;
 
     return ProductListVM(
-        productList: memoizedFilteredProductList(store.state.productState.map, store.state.productState.list, store.state.productListState),
-        productMap: store.state.productState.map,
-        isLoading: store.state.isLoading,
-        isLoaded: store.state.productState.isLoaded,
-        filter: store.state.productUIState.listUIState.filter,
-        onProductTap: (context, product) {
-          store.dispatch(EditProduct(product: product, context: context));
-        },
-        onRefreshed: (context) => _handleRefresh(context),
-        onDismissed: (BuildContext context, ProductEntity product,
-            DismissDirection direction) {
-          final Completer<Null> completer = Completer<Null>();
-          var message = '';
-          if (direction == DismissDirection.endToStart) {
-            if (product.isDeleted || product.isArchived) {
-              store.dispatch(RestoreProductRequest(completer, product.id));
-              message = AppLocalization.of(context).successfullyRestoredProduct;
-            } else {
-              store.dispatch(ArchiveProductRequest(completer, product.id));
-              message = AppLocalization.of(context).successfullyArchivedProduct;
-            }
-          } else if (direction == DismissDirection.startToEnd) {
-            if (product.isDeleted) {
-              store.dispatch(RestoreProductRequest(completer, product.id));
-              message = AppLocalization.of(context).successfullyRestoredProduct;
-            } else {
-              store.dispatch(DeleteProductRequest(completer, product.id));
-              message = AppLocalization.of(context).successfullyDeletedProduct;
-            }
-          }
-          return completer.future.then((_) {
-            Scaffold.of(context).showSnackBar(SnackBar(
-                content: SnackBarRow(
-                  message: message,
-                )));
-          }).catchError((Object error) {
-            showDialog<ErrorDialog>(
-                context: context,
-                builder: (BuildContext context) {
-                  return ErrorDialog(error);
-                });
-          });
-        });
+      user: state.user,
+      productList: memoizedFilteredProductList(state.productState.map,
+          state.productState.list, state.productListState),
+      productMap: state.productState.map,
+      isLoading: state.isLoading,
+      isLoaded: state.productState.isLoaded,
+      filter: state.productUIState.listUIState.filter,
+      onProductTap: (context, product) {
+        store.dispatch(EditProduct(product: product, context: context));
+      },
+      onEntityAction: (context, product, action) {
+        final localization = AppLocalization.of(context);
+        switch (action) {
+          case EntityAction.clone:
+            store.dispatch(
+                EditProduct(context: context, product: product.clone));
+            break;
+          case EntityAction.restore:
+            store.dispatch(RestoreProductRequest(
+                snackBarCompleter(context, localization.restoredProduct),
+                product.id));
+            break;
+          case EntityAction.archive:
+            store.dispatch(ArchiveProductRequest(
+                snackBarCompleter(context, localization.archivedProduct),
+                product.id));
+            break;
+          case EntityAction.delete:
+            store.dispatch(DeleteProductRequest(
+                snackBarCompleter(context, localization.deletedProduct),
+                product.id));
+            break;
+        }
+      },
+      onRefreshed: (context) => _handleRefresh(context),
+    );
   }
+
+  final UserEntity user;
+  final List<int> productList;
+  final BuiltMap<int, ProductEntity> productMap;
+  final String filter;
+  final bool isLoading;
+  final bool isLoaded;
+  final Function(BuildContext, ProductEntity) onProductTap;
+  final Function(BuildContext) onRefreshed;
+  final Function(BuildContext, ProductEntity, EntityAction) onEntityAction;
 }

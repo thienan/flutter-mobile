@@ -3,6 +3,7 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:invoiceninja_flutter/data/models/entities.dart';
 import 'package:invoiceninja_flutter/data/models/invoice_model.dart';
+import 'package:invoiceninja_flutter/data/models/models.dart';
 import 'package:invoiceninja_flutter/utils/formatting.dart';
 
 part 'product_model.g.dart';
@@ -11,6 +12,7 @@ abstract class ProductListResponse
     implements Built<ProductListResponse, ProductListResponseBuilder> {
   factory ProductListResponse([void updates(ProductListResponseBuilder b)]) =
       _$ProductListResponse;
+
   ProductListResponse._();
 
   BuiltList<ProductEntity> get data;
@@ -23,6 +25,7 @@ abstract class ProductItemResponse
     implements Built<ProductItemResponse, ProductItemResponseBuilder> {
   factory ProductItemResponse([void updates(ProductItemResponseBuilder b)]) =
       _$ProductItemResponse;
+
   ProductItemResponse._();
 
   ProductEntity get data;
@@ -43,9 +46,8 @@ class ProductFields {
 }
 
 abstract class ProductEntity extends Object
-    with BaseEntity, ConvertToInvoiceItem
+    with BaseEntity, SelectableEntity, ConvertToInvoiceItem
     implements Built<ProductEntity, ProductEntityBuilder> {
-  static int counter = 0;
   factory ProductEntity() {
     return _$ProductEntity._(
       id: --ProductEntity.counter,
@@ -63,7 +65,12 @@ abstract class ProductEntity extends Object
       isDeleted: false,
     );
   }
+
   ProductEntity._();
+
+  static int counter = 0;
+
+  ProductEntity get clone => rebuild((b) => b..id = --ProductEntity.counter);
 
   @override
   EntityType get entityType {
@@ -185,6 +192,20 @@ abstract class ProductEntity extends Object
       return customValue2;
     }
     return null;
+  }
+
+  List<EntityAction> getEntityActions({UserEntity user}) {
+    final actions = <EntityAction>[];
+
+    if (user.canCreate(EntityType.invoice)) {
+      actions.add(EntityAction.clone);
+    }
+
+    if (actions.isNotEmpty) {
+      actions.add(null);
+    }
+
+    return actions..addAll(getEntityBaseActions(user: user));
   }
 
   static Serializer<ProductEntity> get serializer => _$productEntitySerializer;

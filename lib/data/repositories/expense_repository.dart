@@ -9,25 +9,26 @@ import 'package:invoiceninja_flutter/data/models/models.dart';
 import 'package:invoiceninja_flutter/data/web_client.dart';
 
 class ExpenseRepository {
-  final WebClient webClient;
-
   const ExpenseRepository({
     this.webClient = const WebClient(),
   });
 
-  Future<BuiltList<ExpenseEntity>> loadList(CompanyEntity company, AuthState auth) async {
+  final WebClient webClient;
 
-    final dynamic response = await webClient.get(
-        auth.url + '/expenses?per_page=500', company.token);
+  Future<BuiltList<ExpenseEntity>> loadList(
+      CompanyEntity company, AuthState auth) async {
+    final dynamic response =
+        await webClient.get(auth.url + '/expenses?per_page=500', company.token);
 
-    final ExpenseListResponse expenseResponse = serializers.deserializeWith(
-        ExpenseListResponse.serializer, response);
+    final ExpenseListResponse expenseResponse =
+        serializers.deserializeWith(ExpenseListResponse.serializer, response);
 
     return expenseResponse.data;
   }
 
-  Future saveData(CompanyEntity company, AuthState auth, ExpenseEntity expense, [EntityAction action]) async {
-
+  Future<ExpenseEntity> saveData(
+      CompanyEntity company, AuthState auth, ExpenseEntity expense,
+      [EntityAction action]) async {
     final data = serializers.serializeWith(ExpenseEntity.serializer, expense);
     dynamic response;
 
@@ -42,8 +43,8 @@ class ExpenseRepository {
       response = await webClient.put(url, company.token, json.encode(data));
     }
 
-    final ExpenseItemResponse expenseResponse = serializers.deserializeWith(
-        ExpenseItemResponse.serializer, response);
+    final ExpenseItemResponse expenseResponse =
+        serializers.deserializeWith(ExpenseItemResponse.serializer, response);
 
     return expenseResponse.data;
   }

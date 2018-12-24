@@ -9,10 +9,15 @@ part of 'language_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<LanguageListResponse> _$languageListResponseSerializer =
     new _$LanguageListResponseSerializer();
@@ -33,7 +38,7 @@ class _$LanguageListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, LanguageListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -46,7 +51,7 @@ class _$LanguageListResponseSerializer
 
   @override
   LanguageListResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new LanguageListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -80,7 +85,7 @@ class _$LanguageItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, LanguageItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -92,7 +97,7 @@ class _$LanguageItemResponseSerializer
 
   @override
   LanguageItemResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new LanguageItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -121,7 +126,7 @@ class _$LanguageEntitySerializer
 
   @override
   Iterable serialize(Serializers serializers, LanguageEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
@@ -141,7 +146,7 @@ class _$LanguageEntitySerializer
 
   @override
   LanguageEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new LanguageEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -178,8 +183,9 @@ class _$LanguageListResponse extends LanguageListResponse {
       (new LanguageListResponseBuilder()..update(updates)).build();
 
   _$LanguageListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('LanguageListResponse', 'data');
+    }
   }
 
   @override
@@ -191,10 +197,9 @@ class _$LanguageListResponse extends LanguageListResponse {
       new LanguageListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! LanguageListResponse) return false;
-    return data == other.data;
+    return other is LanguageListResponse && data == other.data;
   }
 
   @override
@@ -231,7 +236,9 @@ class LanguageListResponseBuilder
 
   @override
   void replace(LanguageListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$LanguageListResponse;
   }
 
@@ -270,8 +277,9 @@ class _$LanguageItemResponse extends LanguageItemResponse {
       (new LanguageItemResponseBuilder()..update(updates)).build();
 
   _$LanguageItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('LanguageItemResponse', 'data');
+    }
   }
 
   @override
@@ -283,10 +291,9 @@ class _$LanguageItemResponse extends LanguageItemResponse {
       new LanguageItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! LanguageItemResponse) return false;
-    return data == other.data;
+    return other is LanguageItemResponse && data == other.data;
   }
 
   @override
@@ -323,7 +330,9 @@ class LanguageItemResponseBuilder
 
   @override
   void replace(LanguageItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$LanguageItemResponse;
   }
 
@@ -365,10 +374,12 @@ class _$LanguageEntity extends LanguageEntity {
       (new LanguageEntityBuilder()..update(updates)).build();
 
   _$LanguageEntity._({this.name, this.locale, this.id}) : super._() {
-    if (name == null)
+    if (name == null) {
       throw new BuiltValueNullFieldError('LanguageEntity', 'name');
-    if (locale == null)
+    }
+    if (locale == null) {
       throw new BuiltValueNullFieldError('LanguageEntity', 'locale');
+    }
   }
 
   @override
@@ -380,10 +391,12 @@ class _$LanguageEntity extends LanguageEntity {
       new LanguageEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! LanguageEntity) return false;
-    return name == other.name && locale == other.locale && id == other.id;
+    return other is LanguageEntity &&
+        name == other.name &&
+        locale == other.locale &&
+        id == other.id;
   }
 
   @override
@@ -431,7 +444,9 @@ class LanguageEntityBuilder
 
   @override
   void replace(LanguageEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$LanguageEntity;
   }
 

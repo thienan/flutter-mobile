@@ -9,10 +9,15 @@ part of 'product_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<ProductListResponse> _$productListResponseSerializer =
     new _$ProductListResponseSerializer();
@@ -33,7 +38,7 @@ class _$ProductListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, ProductListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -46,7 +51,7 @@ class _$ProductListResponseSerializer
 
   @override
   ProductListResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ProductListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -80,7 +85,7 @@ class _$ProductItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, ProductItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -92,7 +97,7 @@ class _$ProductItemResponseSerializer
 
   @override
   ProductItemResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ProductItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -120,7 +125,7 @@ class _$ProductEntitySerializer implements StructuredSerializer<ProductEntity> {
 
   @override
   Iterable serialize(Serializers serializers, ProductEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'product_key',
       serializers.serialize(object.productKey,
@@ -173,6 +178,12 @@ class _$ProductEntitySerializer implements StructuredSerializer<ProductEntity> {
         ..add(serializers.serialize(object.isDeleted,
             specifiedType: const FullType(bool)));
     }
+    if (object.isOwner != null) {
+      result
+        ..add('is_owner')
+        ..add(serializers.serialize(object.isOwner,
+            specifiedType: const FullType(bool)));
+    }
     if (object.id != null) {
       result
         ..add('id')
@@ -185,7 +196,7 @@ class _$ProductEntitySerializer implements StructuredSerializer<ProductEntity> {
 
   @override
   ProductEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ProductEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -246,6 +257,10 @@ class _$ProductEntitySerializer implements StructuredSerializer<ProductEntity> {
           result.isDeleted = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'is_owner':
+          result.isOwner = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
         case 'id':
           result.id = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
@@ -265,8 +280,9 @@ class _$ProductListResponse extends ProductListResponse {
       (new ProductListResponseBuilder()..update(updates)).build();
 
   _$ProductListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('ProductListResponse', 'data');
+    }
   }
 
   @override
@@ -278,10 +294,9 @@ class _$ProductListResponse extends ProductListResponse {
       new ProductListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ProductListResponse) return false;
-    return data == other.data;
+    return other is ProductListResponse && data == other.data;
   }
 
   @override
@@ -318,7 +333,9 @@ class ProductListResponseBuilder
 
   @override
   void replace(ProductListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ProductListResponse;
   }
 
@@ -356,8 +373,9 @@ class _$ProductItemResponse extends ProductItemResponse {
       (new ProductItemResponseBuilder()..update(updates)).build();
 
   _$ProductItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('ProductItemResponse', 'data');
+    }
   }
 
   @override
@@ -369,10 +387,9 @@ class _$ProductItemResponse extends ProductItemResponse {
       new ProductItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ProductItemResponse) return false;
-    return data == other.data;
+    return other is ProductItemResponse && data == other.data;
   }
 
   @override
@@ -408,7 +425,9 @@ class ProductItemResponseBuilder
 
   @override
   void replace(ProductItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ProductItemResponse;
   }
 
@@ -466,6 +485,8 @@ class _$ProductEntity extends ProductEntity {
   @override
   final bool isDeleted;
   @override
+  final bool isOwner;
+  @override
   final int id;
 
   factory _$ProductEntity([void updates(ProductEntityBuilder b)]) =>
@@ -485,26 +506,36 @@ class _$ProductEntity extends ProductEntity {
       this.updatedAt,
       this.archivedAt,
       this.isDeleted,
+      this.isOwner,
       this.id})
       : super._() {
-    if (productKey == null)
+    if (productKey == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'productKey');
-    if (notes == null)
+    }
+    if (notes == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'notes');
-    if (cost == null)
+    }
+    if (cost == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'cost');
-    if (taxName1 == null)
+    }
+    if (taxName1 == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'taxName1');
-    if (taxRate1 == null)
+    }
+    if (taxRate1 == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'taxRate1');
-    if (taxName2 == null)
+    }
+    if (taxName2 == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'taxName2');
-    if (taxRate2 == null)
+    }
+    if (taxRate2 == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'taxRate2');
-    if (customValue1 == null)
+    }
+    if (customValue1 == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'customValue1');
-    if (customValue2 == null)
+    }
+    if (customValue2 == null) {
       throw new BuiltValueNullFieldError('ProductEntity', 'customValue2');
+    }
   }
 
   @override
@@ -515,10 +546,10 @@ class _$ProductEntity extends ProductEntity {
   ProductEntityBuilder toBuilder() => new ProductEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ProductEntity) return false;
-    return productKey == other.productKey &&
+    return other is ProductEntity &&
+        productKey == other.productKey &&
         notes == other.notes &&
         cost == other.cost &&
         taxName1 == other.taxName1 &&
@@ -531,6 +562,7 @@ class _$ProductEntity extends ProductEntity {
         updatedAt == other.updatedAt &&
         archivedAt == other.archivedAt &&
         isDeleted == other.isDeleted &&
+        isOwner == other.isOwner &&
         id == other.id;
   }
 
@@ -550,21 +582,23 @@ class _$ProductEntity extends ProductEntity {
                                                 $jc(
                                                     $jc(
                                                         $jc(
-                                                            0,
-                                                            productKey
-                                                                .hashCode),
-                                                        notes.hashCode),
-                                                    cost.hashCode),
-                                                taxName1.hashCode),
-                                            taxRate1.hashCode),
-                                        taxName2.hashCode),
-                                    taxRate2.hashCode),
-                                customValue1.hashCode),
-                            customValue2.hashCode),
-                        createdAt.hashCode),
-                    updatedAt.hashCode),
-                archivedAt.hashCode),
-            isDeleted.hashCode),
+                                                            $jc(
+                                                                0,
+                                                                productKey
+                                                                    .hashCode),
+                                                            notes.hashCode),
+                                                        cost.hashCode),
+                                                    taxName1.hashCode),
+                                                taxRate1.hashCode),
+                                            taxName2.hashCode),
+                                        taxRate2.hashCode),
+                                    customValue1.hashCode),
+                                customValue2.hashCode),
+                            createdAt.hashCode),
+                        updatedAt.hashCode),
+                    archivedAt.hashCode),
+                isDeleted.hashCode),
+            isOwner.hashCode),
         id.hashCode));
   }
 
@@ -584,6 +618,7 @@ class _$ProductEntity extends ProductEntity {
           ..add('updatedAt', updatedAt)
           ..add('archivedAt', archivedAt)
           ..add('isDeleted', isDeleted)
+          ..add('isOwner', isOwner)
           ..add('id', id))
         .toString();
   }
@@ -645,6 +680,10 @@ class ProductEntityBuilder
   bool get isDeleted => _$this._isDeleted;
   set isDeleted(bool isDeleted) => _$this._isDeleted = isDeleted;
 
+  bool _isOwner;
+  bool get isOwner => _$this._isOwner;
+  set isOwner(bool isOwner) => _$this._isOwner = isOwner;
+
   int _id;
   int get id => _$this._id;
   set id(int id) => _$this._id = id;
@@ -666,6 +705,7 @@ class ProductEntityBuilder
       _updatedAt = _$v.updatedAt;
       _archivedAt = _$v.archivedAt;
       _isDeleted = _$v.isDeleted;
+      _isOwner = _$v.isOwner;
       _id = _$v.id;
       _$v = null;
     }
@@ -674,7 +714,9 @@ class ProductEntityBuilder
 
   @override
   void replace(ProductEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ProductEntity;
   }
 
@@ -700,6 +742,7 @@ class ProductEntityBuilder
             updatedAt: updatedAt,
             archivedAt: archivedAt,
             isDeleted: isDeleted,
+            isOwner: isOwner,
             id: id);
     replace(_$result);
     return _$result;

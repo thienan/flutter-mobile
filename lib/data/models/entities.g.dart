@@ -9,12 +9,18 @@ part of 'entities.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 const EntityType _$invoice = const EntityType._('invoice');
+const EntityType _$recurringInvoice = const EntityType._('recurringInvoice');
 const EntityType _$invoiceItem = const EntityType._('invoiceItem');
 const EntityType _$quote = const EntityType._('quote');
 const EntityType _$product = const EntityType._('product');
@@ -29,11 +35,16 @@ const EntityType _$payment = const EntityType._('payment');
 const EntityType _$country = const EntityType._('country');
 const EntityType _$currency = const EntityType._('currency');
 const EntityType _$language = const EntityType._('language');
+const EntityType _$industry = const EntityType._('industry');
+const EntityType _$size = const EntityType._('size');
+const EntityType _$paymentType = const EntityType._('paymentType');
 
 EntityType _$typeValueOf(String name) {
   switch (name) {
     case 'invoice':
       return _$invoice;
+    case 'recurringInvoice':
+      return _$recurringInvoice;
     case 'invoiceItem':
       return _$invoiceItem;
     case 'quote':
@@ -62,6 +73,12 @@ EntityType _$typeValueOf(String name) {
       return _$currency;
     case 'language':
       return _$language;
+    case 'industry':
+      return _$industry;
+    case 'size':
+      return _$size;
+    case 'paymentType':
+      return _$paymentType;
     default:
       throw new ArgumentError(name);
   }
@@ -70,6 +87,7 @@ EntityType _$typeValueOf(String name) {
 final BuiltSet<EntityType> _$typeValues =
     new BuiltSet<EntityType>(const <EntityType>[
   _$invoice,
+  _$recurringInvoice,
   _$invoiceItem,
   _$quote,
   _$product,
@@ -84,6 +102,9 @@ final BuiltSet<EntityType> _$typeValues =
   _$country,
   _$currency,
   _$language,
+  _$industry,
+  _$size,
+  _$paymentType,
 ]);
 
 const EntityState _$active = const EntityState._('active');
@@ -110,8 +131,64 @@ final BuiltSet<EntityState> _$values =
   _$deleted,
 ]);
 
+const EmailTemplate _$initial = const EmailTemplate._('initial');
+const EmailTemplate _$reminder1 = const EmailTemplate._('reminder1');
+const EmailTemplate _$reminder2 = const EmailTemplate._('reminder2');
+const EmailTemplate _$reminder3 = const EmailTemplate._('reminder3');
+
+EmailTemplate _$templateValueOf(String name) {
+  switch (name) {
+    case 'initial':
+      return _$initial;
+    case 'reminder1':
+      return _$reminder1;
+    case 'reminder2':
+      return _$reminder2;
+    case 'reminder3':
+      return _$reminder3;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<EmailTemplate> _$templateValues =
+    new BuiltSet<EmailTemplate>(const <EmailTemplate>[
+  _$initial,
+  _$reminder1,
+  _$reminder2,
+  _$reminder3,
+]);
+
+const UserPermission _$create = const UserPermission._('create');
+const UserPermission _$edit = const UserPermission._('edit');
+const UserPermission _$view = const UserPermission._('view');
+
+UserPermission _$permissionValueOf(String name) {
+  switch (name) {
+    case 'create':
+      return _$create;
+    case 'edit':
+      return _$edit;
+    case 'view':
+      return _$view;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<UserPermission> _$permissionValues =
+    new BuiltSet<UserPermission>(const <UserPermission>[
+  _$create,
+  _$edit,
+  _$view,
+]);
+
 Serializer<EntityType> _$entityTypeSerializer = new _$EntityTypeSerializer();
 Serializer<EntityState> _$entityStateSerializer = new _$EntityStateSerializer();
+Serializer<EmailTemplate> _$emailTemplateSerializer =
+    new _$EmailTemplateSerializer();
+Serializer<UserPermission> _$userPermissionSerializer =
+    new _$UserPermissionSerializer();
 Serializer<ErrorMessage> _$errorMessageSerializer =
     new _$ErrorMessageSerializer();
 Serializer<LoginResponse> _$loginResponseSerializer =
@@ -134,12 +211,12 @@ class _$EntityTypeSerializer implements PrimitiveSerializer<EntityType> {
 
   @override
   Object serialize(Serializers serializers, EntityType object,
-          {FullType specifiedType: FullType.unspecified}) =>
+          {FullType specifiedType = FullType.unspecified}) =>
       object.name;
 
   @override
   EntityType deserialize(Serializers serializers, Object serialized,
-          {FullType specifiedType: FullType.unspecified}) =>
+          {FullType specifiedType = FullType.unspecified}) =>
       EntityType.valueOf(serialized as String);
 }
 
@@ -151,13 +228,48 @@ class _$EntityStateSerializer implements PrimitiveSerializer<EntityState> {
 
   @override
   Object serialize(Serializers serializers, EntityState object,
-          {FullType specifiedType: FullType.unspecified}) =>
+          {FullType specifiedType = FullType.unspecified}) =>
       object.name;
 
   @override
   EntityState deserialize(Serializers serializers, Object serialized,
-          {FullType specifiedType: FullType.unspecified}) =>
+          {FullType specifiedType = FullType.unspecified}) =>
       EntityState.valueOf(serialized as String);
+}
+
+class _$EmailTemplateSerializer implements PrimitiveSerializer<EmailTemplate> {
+  @override
+  final Iterable<Type> types = const <Type>[EmailTemplate];
+  @override
+  final String wireName = 'EmailTemplate';
+
+  @override
+  Object serialize(Serializers serializers, EmailTemplate object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  EmailTemplate deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      EmailTemplate.valueOf(serialized as String);
+}
+
+class _$UserPermissionSerializer
+    implements PrimitiveSerializer<UserPermission> {
+  @override
+  final Iterable<Type> types = const <Type>[UserPermission];
+  @override
+  final String wireName = 'UserPermission';
+
+  @override
+  Object serialize(Serializers serializers, UserPermission object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  UserPermission deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      UserPermission.valueOf(serialized as String);
 }
 
 class _$ErrorMessageSerializer implements StructuredSerializer<ErrorMessage> {
@@ -168,7 +280,7 @@ class _$ErrorMessageSerializer implements StructuredSerializer<ErrorMessage> {
 
   @override
   Iterable serialize(Serializers serializers, ErrorMessage object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'message',
       serializers.serialize(object.message,
@@ -180,7 +292,7 @@ class _$ErrorMessageSerializer implements StructuredSerializer<ErrorMessage> {
 
   @override
   ErrorMessage deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ErrorMessageBuilder();
 
     final iterator = serialized.iterator;
@@ -208,7 +320,7 @@ class _$LoginResponseSerializer implements StructuredSerializer<LoginResponse> {
 
   @override
   Iterable serialize(Serializers serializers, LoginResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -226,7 +338,7 @@ class _$LoginResponseSerializer implements StructuredSerializer<LoginResponse> {
 
   @override
   LoginResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new LoginResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -260,7 +372,7 @@ class _$LoginResponseDataSerializer
 
   @override
   Iterable serialize(Serializers serializers, LoginResponseData object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'accounts',
       serializers.serialize(object.accounts,
@@ -279,7 +391,7 @@ class _$LoginResponseDataSerializer
 
   @override
   LoginResponseData deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new LoginResponseDataBuilder();
 
     final iterator = serialized.iterator;
@@ -317,7 +429,7 @@ class _$StaticDataSerializer implements StructuredSerializer<StaticData> {
 
   @override
   Iterable serialize(Serializers serializers, StaticData object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'currencies',
       serializers.serialize(object.currencies,
@@ -370,7 +482,7 @@ class _$StaticDataSerializer implements StructuredSerializer<StaticData> {
 
   @override
   StaticData deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new StaticDataBuilder();
 
     final iterator = serialized.iterator;
@@ -460,7 +572,7 @@ class _$DashboardResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, DashboardResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -472,7 +584,7 @@ class _$DashboardResponseSerializer
 
   @override
   DashboardResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new DashboardResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -502,68 +614,20 @@ class _$DashboardEntitySerializer
 
   @override
   Iterable serialize(Serializers serializers, DashboardEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'activities',
       serializers.serialize(object.activities,
           specifiedType: const FullType(
               BuiltList, const [const FullType(ActivityEntity)])),
     ];
-    if (object.paidToDate != null) {
-      result
-        ..add('paidToDate')
-        ..add(serializers.serialize(object.paidToDate,
-            specifiedType: const FullType(double)));
-    }
-    if (object.paidToDateCurrency != null) {
-      result
-        ..add('paidToDateCurrency')
-        ..add(serializers.serialize(object.paidToDateCurrency,
-            specifiedType: const FullType(int)));
-    }
-    if (object.balances != null) {
-      result
-        ..add('balances')
-        ..add(serializers.serialize(object.balances,
-            specifiedType: const FullType(double)));
-    }
-    if (object.balancesCurrency != null) {
-      result
-        ..add('balancesCurrency')
-        ..add(serializers.serialize(object.balancesCurrency,
-            specifiedType: const FullType(int)));
-    }
-    if (object.averageInvoice != null) {
-      result
-        ..add('averageInvoice')
-        ..add(serializers.serialize(object.averageInvoice,
-            specifiedType: const FullType(double)));
-    }
-    if (object.averageInvoiceCurrency != null) {
-      result
-        ..add('averageInvoiceCurrency')
-        ..add(serializers.serialize(object.averageInvoiceCurrency,
-            specifiedType: const FullType(int)));
-    }
-    if (object.invoicesSent != null) {
-      result
-        ..add('invoicesSent')
-        ..add(serializers.serialize(object.invoicesSent,
-            specifiedType: const FullType(int)));
-    }
-    if (object.activeClients != null) {
-      result
-        ..add('activeClients')
-        ..add(serializers.serialize(object.activeClients,
-            specifiedType: const FullType(int)));
-    }
 
     return result;
   }
 
   @override
   DashboardEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new DashboardEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -572,38 +636,6 @@ class _$DashboardEntitySerializer
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
-        case 'paidToDate':
-          result.paidToDate = serializers.deserialize(value,
-              specifiedType: const FullType(double)) as double;
-          break;
-        case 'paidToDateCurrency':
-          result.paidToDateCurrency = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'balances':
-          result.balances = serializers.deserialize(value,
-              specifiedType: const FullType(double)) as double;
-          break;
-        case 'balancesCurrency':
-          result.balancesCurrency = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'averageInvoice':
-          result.averageInvoice = serializers.deserialize(value,
-              specifiedType: const FullType(double)) as double;
-          break;
-        case 'averageInvoiceCurrency':
-          result.averageInvoiceCurrency = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'invoicesSent':
-          result.invoicesSent = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
-        case 'activeClients':
-          result.activeClients = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
-          break;
         case 'activities':
           result.activities.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -626,8 +658,11 @@ class _$ActivityEntitySerializer
 
   @override
   Iterable serialize(Serializers serializers, ActivityEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
+      'notes',
+      serializers.serialize(object.notes,
+          specifiedType: const FullType(String)),
       'id',
       serializers.serialize(object.key, specifiedType: const FullType(String)),
       'activity_type_id',
@@ -693,7 +728,7 @@ class _$ActivityEntitySerializer
 
   @override
   ActivityEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new ActivityEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -702,6 +737,10 @@ class _$ActivityEntitySerializer
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
+        case 'notes':
+          result.notes = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'id':
           result.key = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -765,8 +804,9 @@ class _$ErrorMessage extends ErrorMessage {
       (new ErrorMessageBuilder()..update(updates)).build();
 
   _$ErrorMessage._({this.message}) : super._() {
-    if (message == null)
+    if (message == null) {
       throw new BuiltValueNullFieldError('ErrorMessage', 'message');
+    }
   }
 
   @override
@@ -777,10 +817,9 @@ class _$ErrorMessage extends ErrorMessage {
   ErrorMessageBuilder toBuilder() => new ErrorMessageBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ErrorMessage) return false;
-    return message == other.message;
+    return other is ErrorMessage && message == other.message;
   }
 
   @override
@@ -816,7 +855,9 @@ class ErrorMessageBuilder
 
   @override
   void replace(ErrorMessage other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ErrorMessage;
   }
 
@@ -843,8 +884,9 @@ class _$LoginResponse extends LoginResponse {
       (new LoginResponseBuilder()..update(updates)).build();
 
   _$LoginResponse._({this.data, this.error}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('LoginResponse', 'data');
+    }
   }
 
   @override
@@ -855,10 +897,9 @@ class _$LoginResponse extends LoginResponse {
   LoginResponseBuilder toBuilder() => new LoginResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! LoginResponse) return false;
-    return data == other.data && error == other.error;
+    return other is LoginResponse && data == other.data && error == other.error;
   }
 
   @override
@@ -901,7 +942,9 @@ class LoginResponseBuilder
 
   @override
   void replace(LoginResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$LoginResponse;
   }
 
@@ -947,12 +990,15 @@ class _$LoginResponseData extends LoginResponseData {
 
   _$LoginResponseData._({this.accounts, this.version, this.static})
       : super._() {
-    if (accounts == null)
+    if (accounts == null) {
       throw new BuiltValueNullFieldError('LoginResponseData', 'accounts');
-    if (version == null)
+    }
+    if (version == null) {
       throw new BuiltValueNullFieldError('LoginResponseData', 'version');
-    if (static == null)
+    }
+    if (static == null) {
       throw new BuiltValueNullFieldError('LoginResponseData', 'static');
+    }
   }
 
   @override
@@ -964,10 +1010,10 @@ class _$LoginResponseData extends LoginResponseData {
       new LoginResponseDataBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! LoginResponseData) return false;
-    return accounts == other.accounts &&
+    return other is LoginResponseData &&
+        accounts == other.accounts &&
         version == other.version &&
         static == other.static;
   }
@@ -1020,7 +1066,9 @@ class LoginResponseDataBuilder
 
   @override
   void replace(LoginResponseData other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$LoginResponseData;
   }
 
@@ -1097,28 +1145,39 @@ class _$StaticData extends StaticData {
       this.invoiceStatus,
       this.frequencies})
       : super._() {
-    if (currencies == null)
+    if (currencies == null) {
       throw new BuiltValueNullFieldError('StaticData', 'currencies');
-    if (sizes == null)
+    }
+    if (sizes == null) {
       throw new BuiltValueNullFieldError('StaticData', 'sizes');
-    if (industries == null)
+    }
+    if (industries == null) {
       throw new BuiltValueNullFieldError('StaticData', 'industries');
-    if (timezones == null)
+    }
+    if (timezones == null) {
       throw new BuiltValueNullFieldError('StaticData', 'timezones');
-    if (dateFormats == null)
+    }
+    if (dateFormats == null) {
       throw new BuiltValueNullFieldError('StaticData', 'dateFormats');
-    if (datetimeFormats == null)
+    }
+    if (datetimeFormats == null) {
       throw new BuiltValueNullFieldError('StaticData', 'datetimeFormats');
-    if (languages == null)
+    }
+    if (languages == null) {
       throw new BuiltValueNullFieldError('StaticData', 'languages');
-    if (paymentTypes == null)
+    }
+    if (paymentTypes == null) {
       throw new BuiltValueNullFieldError('StaticData', 'paymentTypes');
-    if (countries == null)
+    }
+    if (countries == null) {
       throw new BuiltValueNullFieldError('StaticData', 'countries');
-    if (invoiceStatus == null)
+    }
+    if (invoiceStatus == null) {
       throw new BuiltValueNullFieldError('StaticData', 'invoiceStatus');
-    if (frequencies == null)
+    }
+    if (frequencies == null) {
       throw new BuiltValueNullFieldError('StaticData', 'frequencies');
+    }
   }
 
   @override
@@ -1129,10 +1188,10 @@ class _$StaticData extends StaticData {
   StaticDataBuilder toBuilder() => new StaticDataBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! StaticData) return false;
-    return currencies == other.currencies &&
+    return other is StaticData &&
+        currencies == other.currencies &&
         sizes == other.sizes &&
         industries == other.industries &&
         timezones == other.timezones &&
@@ -1277,7 +1336,9 @@ class StaticDataBuilder implements Builder<StaticData, StaticDataBuilder> {
 
   @override
   void replace(StaticData other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$StaticData;
   }
 
@@ -1347,8 +1408,9 @@ class _$DashboardResponse extends DashboardResponse {
       (new DashboardResponseBuilder()..update(updates)).build();
 
   _$DashboardResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('DashboardResponse', 'data');
+    }
   }
 
   @override
@@ -1360,10 +1422,9 @@ class _$DashboardResponse extends DashboardResponse {
       new DashboardResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! DashboardResponse) return false;
-    return data == other.data;
+    return other is DashboardResponse && data == other.data;
   }
 
   @override
@@ -1399,7 +1460,9 @@ class DashboardResponseBuilder
 
   @override
   void replace(DashboardResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$DashboardResponse;
   }
 
@@ -1431,40 +1494,15 @@ class DashboardResponseBuilder
 
 class _$DashboardEntity extends DashboardEntity {
   @override
-  final double paidToDate;
-  @override
-  final int paidToDateCurrency;
-  @override
-  final double balances;
-  @override
-  final int balancesCurrency;
-  @override
-  final double averageInvoice;
-  @override
-  final int averageInvoiceCurrency;
-  @override
-  final int invoicesSent;
-  @override
-  final int activeClients;
-  @override
   final BuiltList<ActivityEntity> activities;
 
   factory _$DashboardEntity([void updates(DashboardEntityBuilder b)]) =>
       (new DashboardEntityBuilder()..update(updates)).build();
 
-  _$DashboardEntity._(
-      {this.paidToDate,
-      this.paidToDateCurrency,
-      this.balances,
-      this.balancesCurrency,
-      this.averageInvoice,
-      this.averageInvoiceCurrency,
-      this.invoicesSent,
-      this.activeClients,
-      this.activities})
-      : super._() {
-    if (activities == null)
+  _$DashboardEntity._({this.activities}) : super._() {
+    if (activities == null) {
       throw new BuiltValueNullFieldError('DashboardEntity', 'activities');
+    }
   }
 
   @override
@@ -1476,51 +1514,19 @@ class _$DashboardEntity extends DashboardEntity {
       new DashboardEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! DashboardEntity) return false;
-    return paidToDate == other.paidToDate &&
-        paidToDateCurrency == other.paidToDateCurrency &&
-        balances == other.balances &&
-        balancesCurrency == other.balancesCurrency &&
-        averageInvoice == other.averageInvoice &&
-        averageInvoiceCurrency == other.averageInvoiceCurrency &&
-        invoicesSent == other.invoicesSent &&
-        activeClients == other.activeClients &&
-        activities == other.activities;
+    return other is DashboardEntity && activities == other.activities;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc($jc(0, paidToDate.hashCode),
-                                    paidToDateCurrency.hashCode),
-                                balances.hashCode),
-                            balancesCurrency.hashCode),
-                        averageInvoice.hashCode),
-                    averageInvoiceCurrency.hashCode),
-                invoicesSent.hashCode),
-            activeClients.hashCode),
-        activities.hashCode));
+    return $jf($jc(0, activities.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('DashboardEntity')
-          ..add('paidToDate', paidToDate)
-          ..add('paidToDateCurrency', paidToDateCurrency)
-          ..add('balances', balances)
-          ..add('balancesCurrency', balancesCurrency)
-          ..add('averageInvoice', averageInvoice)
-          ..add('averageInvoiceCurrency', averageInvoiceCurrency)
-          ..add('invoicesSent', invoicesSent)
-          ..add('activeClients', activeClients)
           ..add('activities', activities))
         .toString();
   }
@@ -1529,42 +1535,6 @@ class _$DashboardEntity extends DashboardEntity {
 class DashboardEntityBuilder
     implements Builder<DashboardEntity, DashboardEntityBuilder> {
   _$DashboardEntity _$v;
-
-  double _paidToDate;
-  double get paidToDate => _$this._paidToDate;
-  set paidToDate(double paidToDate) => _$this._paidToDate = paidToDate;
-
-  int _paidToDateCurrency;
-  int get paidToDateCurrency => _$this._paidToDateCurrency;
-  set paidToDateCurrency(int paidToDateCurrency) =>
-      _$this._paidToDateCurrency = paidToDateCurrency;
-
-  double _balances;
-  double get balances => _$this._balances;
-  set balances(double balances) => _$this._balances = balances;
-
-  int _balancesCurrency;
-  int get balancesCurrency => _$this._balancesCurrency;
-  set balancesCurrency(int balancesCurrency) =>
-      _$this._balancesCurrency = balancesCurrency;
-
-  double _averageInvoice;
-  double get averageInvoice => _$this._averageInvoice;
-  set averageInvoice(double averageInvoice) =>
-      _$this._averageInvoice = averageInvoice;
-
-  int _averageInvoiceCurrency;
-  int get averageInvoiceCurrency => _$this._averageInvoiceCurrency;
-  set averageInvoiceCurrency(int averageInvoiceCurrency) =>
-      _$this._averageInvoiceCurrency = averageInvoiceCurrency;
-
-  int _invoicesSent;
-  int get invoicesSent => _$this._invoicesSent;
-  set invoicesSent(int invoicesSent) => _$this._invoicesSent = invoicesSent;
-
-  int _activeClients;
-  int get activeClients => _$this._activeClients;
-  set activeClients(int activeClients) => _$this._activeClients = activeClients;
 
   ListBuilder<ActivityEntity> _activities;
   ListBuilder<ActivityEntity> get activities =>
@@ -1576,14 +1546,6 @@ class DashboardEntityBuilder
 
   DashboardEntityBuilder get _$this {
     if (_$v != null) {
-      _paidToDate = _$v.paidToDate;
-      _paidToDateCurrency = _$v.paidToDateCurrency;
-      _balances = _$v.balances;
-      _balancesCurrency = _$v.balancesCurrency;
-      _averageInvoice = _$v.averageInvoice;
-      _averageInvoiceCurrency = _$v.averageInvoiceCurrency;
-      _invoicesSent = _$v.invoicesSent;
-      _activeClients = _$v.activeClients;
       _activities = _$v.activities?.toBuilder();
       _$v = null;
     }
@@ -1592,7 +1554,9 @@ class DashboardEntityBuilder
 
   @override
   void replace(DashboardEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$DashboardEntity;
   }
 
@@ -1605,17 +1569,7 @@ class DashboardEntityBuilder
   _$DashboardEntity build() {
     _$DashboardEntity _$result;
     try {
-      _$result = _$v ??
-          new _$DashboardEntity._(
-              paidToDate: paidToDate,
-              paidToDateCurrency: paidToDateCurrency,
-              balances: balances,
-              balancesCurrency: balancesCurrency,
-              averageInvoice: averageInvoice,
-              averageInvoiceCurrency: averageInvoiceCurrency,
-              invoicesSent: invoicesSent,
-              activeClients: activeClients,
-              activities: activities.build());
+      _$result = _$v ?? new _$DashboardEntity._(activities: activities.build());
     } catch (_) {
       String _$failedField;
       try {
@@ -1633,6 +1587,8 @@ class DashboardEntityBuilder
 }
 
 class _$ActivityEntity extends ActivityEntity {
+  @override
+  final String notes;
   @override
   final String key;
   @override
@@ -1662,7 +1618,8 @@ class _$ActivityEntity extends ActivityEntity {
       (new ActivityEntityBuilder()..update(updates)).build();
 
   _$ActivityEntity._(
-      {this.key,
+      {this.notes,
+      this.key,
       this.activityTypeId,
       this.clientId,
       this.userId,
@@ -1675,14 +1632,21 @@ class _$ActivityEntity extends ActivityEntity {
       this.contactId,
       this.taskId})
       : super._() {
-    if (key == null)
+    if (notes == null) {
+      throw new BuiltValueNullFieldError('ActivityEntity', 'notes');
+    }
+    if (key == null) {
       throw new BuiltValueNullFieldError('ActivityEntity', 'key');
-    if (activityTypeId == null)
+    }
+    if (activityTypeId == null) {
       throw new BuiltValueNullFieldError('ActivityEntity', 'activityTypeId');
-    if (userId == null)
+    }
+    if (userId == null) {
       throw new BuiltValueNullFieldError('ActivityEntity', 'userId');
-    if (updatedAt == null)
+    }
+    if (updatedAt == null) {
       throw new BuiltValueNullFieldError('ActivityEntity', 'updatedAt');
+    }
   }
 
   @override
@@ -1694,10 +1658,11 @@ class _$ActivityEntity extends ActivityEntity {
       new ActivityEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! ActivityEntity) return false;
-    return key == other.key &&
+    return other is ActivityEntity &&
+        notes == other.notes &&
+        key == other.key &&
         activityTypeId == other.activityTypeId &&
         clientId == other.clientId &&
         userId == other.userId &&
@@ -1723,7 +1688,9 @@ class _$ActivityEntity extends ActivityEntity {
                                 $jc(
                                     $jc(
                                         $jc(
-                                            $jc($jc(0, key.hashCode),
+                                            $jc(
+                                                $jc($jc(0, notes.hashCode),
+                                                    key.hashCode),
                                                 activityTypeId.hashCode),
                                             clientId.hashCode),
                                         userId.hashCode),
@@ -1740,6 +1707,7 @@ class _$ActivityEntity extends ActivityEntity {
   @override
   String toString() {
     return (newBuiltValueToStringHelper('ActivityEntity')
+          ..add('notes', notes)
           ..add('key', key)
           ..add('activityTypeId', activityTypeId)
           ..add('clientId', clientId)
@@ -1759,6 +1727,10 @@ class _$ActivityEntity extends ActivityEntity {
 class ActivityEntityBuilder
     implements Builder<ActivityEntity, ActivityEntityBuilder> {
   _$ActivityEntity _$v;
+
+  String _notes;
+  String get notes => _$this._notes;
+  set notes(String notes) => _$this._notes = notes;
 
   String _key;
   String get key => _$this._key;
@@ -1813,6 +1785,7 @@ class ActivityEntityBuilder
 
   ActivityEntityBuilder get _$this {
     if (_$v != null) {
+      _notes = _$v.notes;
       _key = _$v.key;
       _activityTypeId = _$v.activityTypeId;
       _clientId = _$v.clientId;
@@ -1832,7 +1805,9 @@ class ActivityEntityBuilder
 
   @override
   void replace(ActivityEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$ActivityEntity;
   }
 
@@ -1845,6 +1820,7 @@ class ActivityEntityBuilder
   _$ActivityEntity build() {
     final _$result = _$v ??
         new _$ActivityEntity._(
+            notes: notes,
             key: key,
             activityTypeId: activityTypeId,
             clientId: clientId,

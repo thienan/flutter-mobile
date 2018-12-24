@@ -9,25 +9,26 @@ import 'package:invoiceninja_flutter/data/models/models.dart';
 import 'package:invoiceninja_flutter/data/web_client.dart';
 
 class ProjectsRepository {
-  final WebClient webClient;
-
   const ProjectsRepository({
     this.webClient = const WebClient(),
   });
 
-  Future<BuiltList<ProjectEntity>> loadList(CompanyEntity company, AuthState auth) async {
+  final WebClient webClient;
 
-    final dynamic response = await webClient.get(
-        auth.url + '/projects?per_page=500', company.token);
+  Future<BuiltList<ProjectEntity>> loadList(
+      CompanyEntity company, AuthState auth) async {
+    final dynamic response =
+        await webClient.get(auth.url + '/projects?per_page=500', company.token);
 
-    final ProjectListResponse projectResponse = serializers.deserializeWith(
-        ProjectListResponse.serializer, response);
+    final ProjectListResponse projectResponse =
+        serializers.deserializeWith(ProjectListResponse.serializer, response);
 
     return projectResponse.data;
   }
 
-  Future saveData(CompanyEntity company, AuthState auth, ProjectEntity project, [EntityAction action]) async {
-
+  Future<ProjectEntity> saveData(
+      CompanyEntity company, AuthState auth, ProjectEntity project,
+      [EntityAction action]) async {
     final data = serializers.serializeWith(ProjectEntity.serializer, project);
     dynamic response;
 
@@ -42,8 +43,8 @@ class ProjectsRepository {
       response = await webClient.put(url, company.token, json.encode(data));
     }
 
-    final ProjectItemResponse projectResponse = serializers.deserializeWith(
-        ProjectItemResponse.serializer, response);
+    final ProjectItemResponse projectResponse =
+        serializers.deserializeWith(ProjectItemResponse.serializer, response);
 
     return projectResponse.data;
   }

@@ -26,8 +26,8 @@ Middleware<AppState> _createViewDashboard() {
     store.dispatch(UpdateCurrentRoute(DashboardScreen.route));
 
     if (action.context != null) {
-      final NavigatorState navigator = Navigator.of(action.context);
-      navigator.pushReplacementNamed(DashboardScreen.route);
+      Navigator.of(action.context).pushNamedAndRemoveUntil(
+          DashboardScreen.route, (Route<dynamic> route) => false);
     }
 
     next(action);
@@ -59,6 +59,9 @@ Middleware<AppState> _createLoadDashboard(DashboardRepository repository) {
       }
     }).catchError((Object error) {
       print(error);
+      if (action.completer != null) {
+        action.completer.completeError(error);
+      }
       store.dispatch(LoadDashboardFailure(error));
     });
 

@@ -9,10 +9,15 @@ part of 'invoice_status_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<InvoiceStatusListResponse> _$invoiceStatusListResponseSerializer =
     new _$InvoiceStatusListResponseSerializer();
@@ -33,7 +38,7 @@ class _$InvoiceStatusListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, InvoiceStatusListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -47,7 +52,7 @@ class _$InvoiceStatusListResponseSerializer
   @override
   InvoiceStatusListResponse deserialize(
       Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new InvoiceStatusListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -81,7 +86,7 @@ class _$InvoiceStatusItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, InvoiceStatusItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -94,7 +99,7 @@ class _$InvoiceStatusItemResponseSerializer
   @override
   InvoiceStatusItemResponse deserialize(
       Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new InvoiceStatusItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -127,7 +132,7 @@ class _$InvoiceStatusEntitySerializer
 
   @override
   Iterable serialize(Serializers serializers, InvoiceStatusEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
@@ -140,7 +145,7 @@ class _$InvoiceStatusEntitySerializer
 
   @override
   InvoiceStatusEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new InvoiceStatusEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -173,8 +178,9 @@ class _$InvoiceStatusListResponse extends InvoiceStatusListResponse {
       (new InvoiceStatusListResponseBuilder()..update(updates)).build();
 
   _$InvoiceStatusListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('InvoiceStatusListResponse', 'data');
+    }
   }
 
   @override
@@ -187,10 +193,9 @@ class _$InvoiceStatusListResponse extends InvoiceStatusListResponse {
       new InvoiceStatusListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! InvoiceStatusListResponse) return false;
-    return data == other.data;
+    return other is InvoiceStatusListResponse && data == other.data;
   }
 
   @override
@@ -228,7 +233,9 @@ class InvoiceStatusListResponseBuilder
 
   @override
   void replace(InvoiceStatusListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$InvoiceStatusListResponse;
   }
 
@@ -267,8 +274,9 @@ class _$InvoiceStatusItemResponse extends InvoiceStatusItemResponse {
       (new InvoiceStatusItemResponseBuilder()..update(updates)).build();
 
   _$InvoiceStatusItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('InvoiceStatusItemResponse', 'data');
+    }
   }
 
   @override
@@ -281,10 +289,9 @@ class _$InvoiceStatusItemResponse extends InvoiceStatusItemResponse {
       new InvoiceStatusItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! InvoiceStatusItemResponse) return false;
-    return data == other.data;
+    return other is InvoiceStatusItemResponse && data == other.data;
   }
 
   @override
@@ -322,7 +329,9 @@ class InvoiceStatusItemResponseBuilder
 
   @override
   void replace(InvoiceStatusItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$InvoiceStatusItemResponse;
   }
 
@@ -362,10 +371,12 @@ class _$InvoiceStatusEntity extends InvoiceStatusEntity {
       (new InvoiceStatusEntityBuilder()..update(updates)).build();
 
   _$InvoiceStatusEntity._({this.id, this.name}) : super._() {
-    if (id == null)
+    if (id == null) {
       throw new BuiltValueNullFieldError('InvoiceStatusEntity', 'id');
-    if (name == null)
+    }
+    if (name == null) {
       throw new BuiltValueNullFieldError('InvoiceStatusEntity', 'name');
+    }
   }
 
   @override
@@ -377,10 +388,9 @@ class _$InvoiceStatusEntity extends InvoiceStatusEntity {
       new InvoiceStatusEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! InvoiceStatusEntity) return false;
-    return id == other.id && name == other.name;
+    return other is InvoiceStatusEntity && id == other.id && name == other.name;
   }
 
   @override
@@ -422,7 +432,9 @@ class InvoiceStatusEntityBuilder
 
   @override
   void replace(InvoiceStatusEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$InvoiceStatusEntity;
   }
 

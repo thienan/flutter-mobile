@@ -9,10 +9,15 @@ part of 'credit_model.dart';
 // ignore_for_file: always_put_control_body_on_new_line
 // ignore_for_file: annotate_overrides
 // ignore_for_file: avoid_annotating_with_dynamic
+// ignore_for_file: avoid_catches_without_on_clauses
 // ignore_for_file: avoid_returning_this
+// ignore_for_file: lines_longer_than_80_chars
 // ignore_for_file: omit_local_variable_types
 // ignore_for_file: prefer_expression_function_bodies
 // ignore_for_file: sort_constructors_first
+// ignore_for_file: unnecessary_const
+// ignore_for_file: unnecessary_new
+// ignore_for_file: test_types_in_equals
 
 Serializer<CreditListResponse> _$creditListResponseSerializer =
     new _$CreditListResponseSerializer();
@@ -30,7 +35,7 @@ class _$CreditListResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, CreditListResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -43,7 +48,7 @@ class _$CreditListResponseSerializer
 
   @override
   CreditListResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new CreditListResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -74,7 +79,7 @@ class _$CreditItemResponseSerializer
 
   @override
   Iterable serialize(Serializers serializers, CreditItemResponse object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'data',
       serializers.serialize(object.data,
@@ -86,7 +91,7 @@ class _$CreditItemResponseSerializer
 
   @override
   CreditItemResponse deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new CreditItemResponseBuilder();
 
     final iterator = serialized.iterator;
@@ -114,7 +119,7 @@ class _$CreditEntitySerializer implements StructuredSerializer<CreditEntity> {
 
   @override
   Iterable serialize(Serializers serializers, CreditEntity object,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'amount',
       serializers.serialize(object.amount,
@@ -162,6 +167,12 @@ class _$CreditEntitySerializer implements StructuredSerializer<CreditEntity> {
         ..add(serializers.serialize(object.isDeleted,
             specifiedType: const FullType(bool)));
     }
+    if (object.isOwner != null) {
+      result
+        ..add('is_owner')
+        ..add(serializers.serialize(object.isOwner,
+            specifiedType: const FullType(bool)));
+    }
     if (object.id != null) {
       result
         ..add('id')
@@ -174,7 +185,7 @@ class _$CreditEntitySerializer implements StructuredSerializer<CreditEntity> {
 
   @override
   CreditEntity deserialize(Serializers serializers, Iterable serialized,
-      {FullType specifiedType: FullType.unspecified}) {
+      {FullType specifiedType = FullType.unspecified}) {
     final result = new CreditEntityBuilder();
 
     final iterator = serialized.iterator;
@@ -227,6 +238,10 @@ class _$CreditEntitySerializer implements StructuredSerializer<CreditEntity> {
           result.isDeleted = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'is_owner':
+          result.isOwner = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
         case 'id':
           result.id = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
@@ -246,8 +261,9 @@ class _$CreditListResponse extends CreditListResponse {
       (new CreditListResponseBuilder()..update(updates)).build();
 
   _$CreditListResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('CreditListResponse', 'data');
+    }
   }
 
   @override
@@ -259,10 +275,9 @@ class _$CreditListResponse extends CreditListResponse {
       new CreditListResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! CreditListResponse) return false;
-    return data == other.data;
+    return other is CreditListResponse && data == other.data;
   }
 
   @override
@@ -299,7 +314,9 @@ class CreditListResponseBuilder
 
   @override
   void replace(CreditListResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$CreditListResponse;
   }
 
@@ -337,8 +354,9 @@ class _$CreditItemResponse extends CreditItemResponse {
       (new CreditItemResponseBuilder()..update(updates)).build();
 
   _$CreditItemResponse._({this.data}) : super._() {
-    if (data == null)
+    if (data == null) {
       throw new BuiltValueNullFieldError('CreditItemResponse', 'data');
+    }
   }
 
   @override
@@ -350,10 +368,9 @@ class _$CreditItemResponse extends CreditItemResponse {
       new CreditItemResponseBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! CreditItemResponse) return false;
-    return data == other.data;
+    return other is CreditItemResponse && data == other.data;
   }
 
   @override
@@ -389,7 +406,9 @@ class CreditItemResponseBuilder
 
   @override
   void replace(CreditItemResponse other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$CreditItemResponse;
   }
 
@@ -443,6 +462,8 @@ class _$CreditEntity extends CreditEntity {
   @override
   final bool isDeleted;
   @override
+  final bool isOwner;
+  @override
   final int id;
 
   factory _$CreditEntity([void updates(CreditEntityBuilder b)]) =>
@@ -460,22 +481,30 @@ class _$CreditEntity extends CreditEntity {
       this.updatedAt,
       this.archivedAt,
       this.isDeleted,
+      this.isOwner,
       this.id})
       : super._() {
-    if (amount == null)
+    if (amount == null) {
       throw new BuiltValueNullFieldError('CreditEntity', 'amount');
-    if (balance == null)
+    }
+    if (balance == null) {
       throw new BuiltValueNullFieldError('CreditEntity', 'balance');
-    if (creditDate == null)
+    }
+    if (creditDate == null) {
       throw new BuiltValueNullFieldError('CreditEntity', 'creditDate');
-    if (creditNumber == null)
+    }
+    if (creditNumber == null) {
       throw new BuiltValueNullFieldError('CreditEntity', 'creditNumber');
-    if (privateNotes == null)
+    }
+    if (privateNotes == null) {
       throw new BuiltValueNullFieldError('CreditEntity', 'privateNotes');
-    if (publicNotes == null)
+    }
+    if (publicNotes == null) {
       throw new BuiltValueNullFieldError('CreditEntity', 'publicNotes');
-    if (clientId == null)
+    }
+    if (clientId == null) {
       throw new BuiltValueNullFieldError('CreditEntity', 'clientId');
+    }
   }
 
   @override
@@ -486,10 +515,10 @@ class _$CreditEntity extends CreditEntity {
   CreditEntityBuilder toBuilder() => new CreditEntityBuilder()..replace(this);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    if (other is! CreditEntity) return false;
-    return amount == other.amount &&
+    return other is CreditEntity &&
+        amount == other.amount &&
         balance == other.balance &&
         creditDate == other.creditDate &&
         creditNumber == other.creditNumber &&
@@ -500,6 +529,7 @@ class _$CreditEntity extends CreditEntity {
         updatedAt == other.updatedAt &&
         archivedAt == other.archivedAt &&
         isDeleted == other.isDeleted &&
+        isOwner == other.isOwner &&
         id == other.id;
   }
 
@@ -515,17 +545,19 @@ class _$CreditEntity extends CreditEntity {
                                 $jc(
                                     $jc(
                                         $jc(
-                                            $jc($jc(0, amount.hashCode),
-                                                balance.hashCode),
-                                            creditDate.hashCode),
-                                        creditNumber.hashCode),
-                                    privateNotes.hashCode),
-                                publicNotes.hashCode),
-                            clientId.hashCode),
-                        createdAt.hashCode),
-                    updatedAt.hashCode),
-                archivedAt.hashCode),
-            isDeleted.hashCode),
+                                            $jc(
+                                                $jc($jc(0, amount.hashCode),
+                                                    balance.hashCode),
+                                                creditDate.hashCode),
+                                            creditNumber.hashCode),
+                                        privateNotes.hashCode),
+                                    publicNotes.hashCode),
+                                clientId.hashCode),
+                            createdAt.hashCode),
+                        updatedAt.hashCode),
+                    archivedAt.hashCode),
+                isDeleted.hashCode),
+            isOwner.hashCode),
         id.hashCode));
   }
 
@@ -543,6 +575,7 @@ class _$CreditEntity extends CreditEntity {
           ..add('updatedAt', updatedAt)
           ..add('archivedAt', archivedAt)
           ..add('isDeleted', isDeleted)
+          ..add('isOwner', isOwner)
           ..add('id', id))
         .toString();
   }
@@ -596,6 +629,10 @@ class CreditEntityBuilder
   bool get isDeleted => _$this._isDeleted;
   set isDeleted(bool isDeleted) => _$this._isDeleted = isDeleted;
 
+  bool _isOwner;
+  bool get isOwner => _$this._isOwner;
+  set isOwner(bool isOwner) => _$this._isOwner = isOwner;
+
   int _id;
   int get id => _$this._id;
   set id(int id) => _$this._id = id;
@@ -615,6 +652,7 @@ class CreditEntityBuilder
       _updatedAt = _$v.updatedAt;
       _archivedAt = _$v.archivedAt;
       _isDeleted = _$v.isDeleted;
+      _isOwner = _$v.isOwner;
       _id = _$v.id;
       _$v = null;
     }
@@ -623,7 +661,9 @@ class CreditEntityBuilder
 
   @override
   void replace(CreditEntity other) {
-    if (other == null) throw new ArgumentError.notNull('other');
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
     _$v = other as _$CreditEntity;
   }
 
@@ -647,6 +687,7 @@ class CreditEntityBuilder
             updatedAt: updatedAt,
             archivedAt: archivedAt,
             isDeleted: isDeleted,
+            isOwner: isOwner,
             id: id);
     replace(_$result);
     return _$result;
